@@ -1,0 +1,276 @@
+extends layout
+
+
+block content
+    script.
+        var minAvg = !{JSON.stringify(minAvg)};
+        var maxAvg = !{JSON.stringify(maxAvg)};
+        var stdDev = !{JSON.stringify(stdDev)};
+        var numTeams = !{JSON.stringify(numTeams)};
+        var wins = !{JSON.stringify(wins)};
+        var outscores = !{JSON.stringify(outscores)};
+        var draws = !{JSON.stringify(draws)};
+        var totals = !{JSON.stringify(totals)};
+        var winValue = !{JSON.stringify(winValue)} || 10;
+        var outscoreValue = !{JSON.stringify(outscoreValue)} || 1;
+        var drawValue = !{JSON.stringify(drawValue)} || 5;
+        var rankedSeasonPoints = !{JSON.stringify(rankedSeasonPoints)};
+        var matchups = !{JSON.stringify(matchups)};
+
+        $(document).ready(function () {
+            $("table.tablesorter").tablesorter(
+                // {
+                //     sortList  : [[ 4,0 ]]
+                // }
+            );
+
+
+            var totalsOutputs = $("[id^='totals-output-']");
+
+            var winsSlider = document.getElementById("wins-slider");
+            var winsSliderOutput = document.getElementById("wins-slider-output");
+            winsSliderOutput.value = winValue;
+            winsSlider.onchange = function () {
+                winsSliderOutput.value = winValue = this.value;
+                recalculate();
+            }
+
+            var outscoresSlider = document.getElementById("outscores-slider");
+            var outscoresSliderOutput = document.getElementById("outscores-slider-output");
+            outscoresSliderOutput.value = outscoreValue;
+            outscoresSlider.onchange = function () {
+                outscoresSliderOutput.value = outscoreValue = this.value;
+                recalculate();
+            }
+
+            var drawsSlider = document.getElementById("draws-slider");
+            var drawsSliderOutput = document.getElementById("draws-slider-output");
+            drawsSliderOutput.value = drawValue;
+            drawsSlider.onchange = function () {
+                drawsSliderOutput.value = drawValue = this.value;
+                recalculate();
+            }
+
+            function recalculate() {
+                for (var i = 1; i <= numTeams; i++) {
+                    var total = wins[i] * winValue + outscores[i] * outscoreValue + draws[i] * drawValue;
+                    totalsOutputs[i - 1].value = total;
+                    totals[i] = total;
+                }
+
+                for (let weekNum in matchups) {
+                    let weeksMatchups = matchups[weekNum];
+                    for (let i = 0; i < weeksMatchups.length; i++) {
+
+                        let opp1 = matchups[weekNum][i].opp1;
+                        let opp2 = matchups[weekNum][i].opp2;
+
+                        var opp1VpTotal = rankedSeasonPoints[weekNum].rankings[opp1].wins * winValue +
+                            rankedSeasonPoints[weekNum].rankings[opp1].outscores * outscoreValue +
+                            rankedSeasonPoints[weekNum].rankings[opp1].draws * drawValue;
+
+                        document.getElementById('weekly-vp-output-' + weekNum + '-' + opp1).value = opp1VpTotal;
+                        rankedSeasonPoints[weekNum].rankings[opp1].victoryPoints = opp1VpTotal;
+
+                        var opp2VpTotal =
+                            rankedSeasonPoints[weekNum].rankings[opp2].wins * winValue +
+                            rankedSeasonPoints[weekNum].rankings[opp2].outscores * outscoreValue +
+                            rankedSeasonPoints[weekNum].rankings[opp2].draws * drawValue;
+
+                        document.getElementById('weekly-vp-output-' + weekNum + '-' + opp2).value = opp2VpTotal;
+                        rankedSeasonPoints[weekNum].rankings[opp2].victoryPoints = opp2VpTotal;
+                    }
+                }
+                $("table.tablesorter").trigger("update");
+                $("table.tablesorter").trigger("appendCache");
+            }
+        });
+
+
+    h1= title
+    body
+        h1.text-center Victory Point Simulator
+        .container
+            .row.align-items-center
+                .col
+                    form(action='/setup/manual', method='POST')
+                        p Number of teams
+                        input(type='number', name='numTeams', value=numTeams || 12)
+                        br
+                        br
+                        p Minimum Average Points per Game
+                        input(type='number', name='minAvg', value=minAvg || 100)
+                        br
+                        br
+                        p Maximum Average Points per Game
+                        input(type='number', name='maxAvg', value=maxAvg || 200)
+                        br
+                        br
+                        p Standard Deviation
+                        input(type='number', name='stdDev', value=stdDev || 1)
+                        br
+                        br
+                        input(type='submit', value='Submit')
+                .col
+                    form(action='setup/manual', method='POST')
+                        table
+                            tbody.text-center
+                                tr
+                                    th Wins
+                                    td
+                                        output#wins-slider-output #{winValue}
+                                tr
+                                    td(colspan=2)
+                                        input.slider(type='range', min=1, max=20, step=1, value=10, name=winValue)#wins-slider
+
+                                tr
+                                    th Outscores
+                                    td
+                                        output#outscores-slider-output #{outscoreValue}
+                                tr
+                                    td(colspan=2)
+                                        input.slider(type='range', min=1, max=20, step=1, value=1, name=outscoreValue)#outscores-slider
+
+                                tr
+                                    th Draws
+                                    td
+                                        output#draws-slider-output #{drawValue}
+                                tr
+                                    td(colspan=2)
+                                        input.slider(type='range', min=1, max=20, step=1, value=5, name=drawValue)#draws-slider
+        .container
+            .row.align-items-center
+                .col
+                    hr
+                    h4.text-center Simulated Victory Point Outcomes
+                    if wins
+                        table.tablesorter.table-striped.tabletext-center(width='100%')#outcomes-table
+                            thead.text-center
+                                tr
+                                    td
+                                    th Wins
+                                    th Outscores
+                                    th Draws
+                                    th Total Points
+                            tbody.text-center
+                                each teamNum in Object.keys(wins)
+                                    tr
+                                        th Team #{teamNum}
+                                        td
+                                            output(id='wins-output-' + teamNum) #{wins[teamNum]}
+                                        td
+                                            output(id='outscores-output-' + teamNum) #{outscores[teamNum]}
+                                        td
+                                            output(id='draws-output-' + teamNum) #{draws[teamNum]}
+                                        th
+                                            output(id='totals-output-' + teamNum) #{totals[teamNum]}
+
+
+                    hr
+                    h4.text-center Weekly Matchup Results
+                    if rankedSeasonPoints
+                        .container
+                            .accordion#week-results-accordion
+                                .card
+                                    each weekNum in Object.keys(matchups)
+                                        - var rankedWeek = rankedSeasonPoints[weekNum]
+                                        - var weekMatchups = matchups[weekNum];
+                                            .card-header(id="heading" + weekNum)
+                                                button.btn.btn-link(data-toggle="collapse", data-target="#collapse" + weekNum, aria-expanded="false", aria-controls="collapse" + weekNum, colspan='3', bgcolor='lightgray') #{rankedWeek.name}
+
+                                                .card-body(id="collapse" + weekNum, class="collapse show", aria-labelledby="heading" + weekNum, data-parent="#week-results-accordion")
+                                                    table.table
+                                                        each matchup in weekMatchups
+                                                            - var opp1Name = rankedWeek.rankings[matchup.opp1].teamName;
+                                                            - var opp2Name = rankedWeek.rankings[matchup.opp2].teamName;
+                                                            - var opp1Points = rankedWeek.rankings[matchup.opp1].points;
+                                                            - var opp2Points = rankedWeek.rankings[matchup.opp2].points;
+                                                            - var opp1Rank = rankedWeek.rankings[matchup.opp1].rank;
+                                                            - var opp2Rank = rankedWeek.rankings[matchup.opp2].rank;
+                                                            - var opp1Outscores = rankedWeek.rankings[matchup.opp1].outscores;
+                                                            - var opp2Outscores = rankedWeek.rankings[matchup.opp2].outscores;
+
+                                                            tr(bgcolor='lightblue')
+                                                                td(width="10%")
+                                                                th #{opp1Name}
+                                                                th #{opp2Name}
+                                                            tr
+                                                                th(bgcolor='whitesmoke') Points
+                                                                td #{opp1Points}
+                                                                td #{opp2Points}
+                                                            tr
+                                                                th(bgcolor='whitesmoke') Rank
+                                                                td #{opp1Rank}
+                                                                td #{opp2Rank}
+                                                            tr
+                                                                th(bgcolor='whitesmoke') Outscores
+                                                                td #{opp1Outscores}
+                                                                td #{opp2Outscores}
+                                                            tr
+                                                                th(bgcolor='whitesmoke') Victory Points
+                                                                td
+                                                                    output(id='weekly-vp-output-' + weekNum + "-" + matchup.opp1)
+                                                                td
+                                                                    output(id='weekly-vp-output-' + weekNum + "-" + matchup.opp2)
+
+
+
+
+        .container
+            .row.align-items-center
+                .col
+                    hr
+                    h4.text-center Weekly Matchup Results
+                    if rankedSeasonPoints
+                        .container
+                            table.tablesorter.table.text-center(width='100%')
+                                .accordion(id="week-results-accordion")
+                                    .card
+                                        each weekNum in Object.keys(matchups)
+                                            .row.align-items-center
+                                                .col
+                                                    - var rankedWeek = rankedSeasonPoints[weekNum]
+                                                    - var weekMatchups = matchups[weekNum];
+                                                    .card-header(id="heading" + weekNum)
+                                                        th.text-center(data-toggle="collapse", data-target="#collapse" + weekNum, aria-expanded="false", aria-controls="collapse" + weekNum, colspan='3', bgcolor='lightgray') #{rankedWeek.name}
+                                                        tr
+
+                                                        .card-body(id="collapse" + weekNum, class="collapse show", aria-labelledby="heading" + weekNum, data-parent="#week-results-accordion")
+                                                            each matchup in weekMatchups
+                                                                - var opp1Name = rankedWeek.rankings[matchup.opp1].teamName;
+                                                                - var opp2Name = rankedWeek.rankings[matchup.opp2].teamName;
+                                                                - var opp1Points = rankedWeek.rankings[matchup.opp1].points;
+                                                                - var opp2Points = rankedWeek.rankings[matchup.opp2].points;
+                                                                - var opp1Rank = rankedWeek.rankings[matchup.opp1].rank;
+                                                                - var opp2Rank = rankedWeek.rankings[matchup.opp2].rank;
+                                                                - var opp1Wins = rankedWeek.rankings[matchup.opp1].wins;
+                                                                - var opp2Wins = rankedWeek.rankings[matchup.opp2].wins;
+                                                                - var opp1Outscores = rankedWeek.rankings[matchup.opp1].outscores;
+                                                                - var opp2Outscores = rankedWeek.rankings[matchup.opp2].outscores;
+                                                                - var opp1Draws = rankedWeek.rankings[matchup.opp1].draws;
+                                                                - var opp2Draws = rankedWeek.rankings[matchup.opp2].draws;
+
+                                                                tr(bgcolor='lightblue')
+                                                                    td(width="10%")
+                                                                    th #{opp1Name}
+                                                                    th #{opp2Name}
+                                                                tr
+                                                                    th(bgcolor='whitesmoke') Points
+                                                                    td #{opp1Points}
+                                                                    td #{opp2Points}
+                                                                tr
+                                                                    th(bgcolor='whitesmoke') Rank
+                                                                    td #{opp1Rank}
+                                                                    td #{opp2Rank}
+                                                                tr
+                                                                    th(bgcolor='whitesmoke') Outscores
+                                                                    td #{opp1Outscores}
+                                                                    td #{opp2Outscores}
+                                                                tr
+                                                                    th(bgcolor='whitesmoke') Victory Points
+                                                                    td
+                                                                        output(id='weekly-vp-output-' + weekNum + "-" + matchup.opp1)
+                                                                    td
+                                                                        output(id='weekly-vp-output-' + weekNum + "-" + matchup.opp2)
+
+

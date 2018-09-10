@@ -1,0 +1,28 @@
+{
+  "name": "rankor",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "bootstrap": "*",
+    "buffer": "*",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "fast-xml-parser": "*",
+    "http": "*",
+    "http-errors": "~1.6.2",
+    "jquery": "*",
+    "morgan": "~1.9.0",
+    "node-sass-middleware": "0.11.0",
+    "pug": "2.0.0-beta11",
+    "querystring": "*",
+    "rangeslider.js": "^2.3.2",
+    "request": "*",
+    "request-to-curl": "*",
+    "string-format": "*",
+    "tablesorter": "*"
+  }
+}
