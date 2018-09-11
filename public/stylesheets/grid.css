@@ -1,0 +1,41 @@
+.col-vs {
+    background-color: powderblue;
+    font-size: large;
+    font-weight: bolder;
+}
+
+.empty-cell {
+    background-color: darkgray;
+}
+
+.row-team {
+    background-color: lightgrey;
+    font-size: medium;
+    font-weight: bold;
+}
+
+.row-lowlight {
+    background-color: aliceblue;
+    font-size: medium;
+    font-weight: bold;
+}
+
+.row-midlight {
+    background-color: lightsteelblue;
+    font-size: medium;
+    font-weight: bold;
+}
+
+.row-highlight {
+    background-color: palegoldenrod;
+    font-size: medium;
+    font-weight: bolder;
+}
+
+.week-header {
+    background-color: #ffc57f;
+}
+
+.container-fluid {
+    background-color: ghostwhite;
+}

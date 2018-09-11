@@ -1,4 +1,50 @@
 extends layout
 
 block content
-    p rankings
+    link(rel='stylesheet', href='/stylesheets/grid.css')
+
+    if weekResults
+        - var weekNum = weekResults.weekNumber;
+        h1.week-header.text-center#week-heading Week #{weekNum}
+
+        - var TEAM_1_ID = 0;
+        - var TEAM_2_ID = 1;
+        - var matchupResults = weekResults.results.matchups;
+        - var team1;
+        - var team2;
+        - var TEAM_1_COL_ID_TMPL = `team-${TEAM_1_ID}`;
+        - var TEAM_2_COL_ID_TMPL = `team-${TEAM_2_ID}`;
+        .container-fluid.week-header
+            .row
+                each matchupResult, i in matchupResults
+                    - team1 = matchupResult[TEAM_1_ID];
+                    - team2 = matchupResult[TEAM_2_ID];
+                    .col-md-4
+                        table.table.text-center.table-borderless(width="100%")#result-table
+                            thead.text-xl-center: tr
+                                th.empty-cell
+                                th.row-team(id=TEAM_1_COL_ID_TMPL) #{team1.name}
+                                th.row-team VS.
+                                th.row-team(id=TEAM_2_COL_ID_TMPL) #{team2.name}
+                            tbody#result-table-body
+                                tr.row-lowlight
+                                    th(scope="col") Pts
+                                    td #{team1.points}
+                                    td
+                                    td #{team2.points}
+                                tr.row-midlight
+                                    th(scope="col") Rank
+                                    td #{team1.rank}
+                                    td
+                                    td #{team2.rank}
+                                tr.row-midlight
+                                    th(scope="col") Outscores
+                                    td #{team1.outscores}
+                                    td
+                                    td #{team2.outscores}
+                                tr.row-highlight
+                                    th(scope="col") Payday Pts
+                                    td #{team1.rankingPoints}
+                                    td
+                                    td #{team2.rankingPoints}
+        
