@@ -1,0 +1,6 @@
+flask
+configparser
+requests
+untangle
+_pickle
+goldfinch
