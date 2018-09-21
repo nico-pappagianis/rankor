@@ -1,4 +1,14 @@
+import os
 from enum import Enum
+
+from data_attributes import MatchupAttrs, TeamAttrs
+from fantasy_data import FantasyData, get_attribute
+
+SEASON_MATCHUPS_FILE = os.path.join('{league_data_dir}', 'season-matchups.data')
+WEEK_MATCHUPS_DIR = os.path.join('{league_data_dir}', 'matchups')
+WEEK_MATCHUPS_FILE = 'week-{week}.data'
+WEEK_MATCHUPS_QUERY = 'league/{league_key}/scoreboard;week={week}'
+TEAM_MATCHUP_QUERY = 'team/{team_key}/matchups'
 
 
 class Matchup:
@@ -7,28 +17,31 @@ class Matchup:
         PRE_EVENT = 'preevent'
         MID_EVENT = 'midevent'
 
-    def __init__(self, matchup_data):
-        self.week_number = matchup_data.week.cdata
-        self.week_start = matchup_data.week_start.cdata
-        self.week_end = matchup_data.week_end.cdata
-        self.status = matchup_data.status.cdata
+    def __init__(self, league, matchup_data):
+        self.week = matchup_data.week.cdata
+        self.status = Matchup.Status(matchup_data.status)
 
-        team1_data = matchup_data.teams.team[0]
-        self.team1_id = team1_data.team_id.cdata
-        self.team1_name = team1_data.name.cdata
-        self.team1_points = float(team1_data.team_points.total.cdata)
+        teams = get_attribute(matchup_data, MatchupAttrs.MATCHUP_TEAMS)
+        self.team1 = league.teams[int(get_attribute(teams[0], TeamAttrs.TEAM_ID))]
+        self.team1_points = float(get_attribute(teams[0], MatchupAttrs.MATCHUP_TEAM_POINTS))
 
-        team2_data = matchup_data.teams.team[1]
-        self.team2_id = team2_data.team_id.cdata
-        self.team2_name = team2_data.name.cdata
-        self.team2_points = float(team2_data.team_points.total.cdata)
-
-        self.draw = self.status == Matchup.Status.POST_EVENT and self.team1_points == self.team2_points
+        self.team2 = league.teams[int(get_attribute(teams[1], TeamAttrs.TEAM_ID))]
+        self.team2_points = float(get_attribute(teams[1], MatchupAttrs.MATCHUP_TEAM_POINTS))
 
     def __str__(self):
-        return 'Week {week_number}: ' \
-               'Team {team1_id} - {team1_name} ({team1_points}) vs ' \
-               'Team {team2_id} - {team2_name} ({team2_points})' \
-            .format(week_number=self.week_number,
-                    team1_id=self.team1_id, team1_name=self.team1_name, team1_points=self.team1_points,
-                    team2_id=self.team2_id, team2_name=self.team2_name, team2_points=self.team2_points)
+        return 'Week {week} - {team1} {team1_points} vs {team2_points} {team2}'.format(
+            week=self.week,
+            team1=self.team1, team1_points=self.team1_points,
+            team2_points=self.team2_points, team2=self.team2)
+
+
+class WeekMatchups(FantasyData):
+    def __init__(self, league, week):
+        self.week = week
+        self.matchups = []
+        super(WeekMatchups, self).__init__(
+            api_query=WEEK_MATCHUPS_QUERY.format(league_key=league.league_key, week=week))
+
+        matchups_data = self.get_attribute(MatchupAttrs.WEEK_MATCHUPS)
+        for matchup_data in matchups_data:
+            self.matchups.append(Matchup(league, matchup_data))

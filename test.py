@@ -1,8 +1,8 @@
-from league import LeagueData
-import leaguerankings
+from league import League
+import rankings
 
 
-l = LeagueData('nfl', '2018', '1067871')
-# r = leaguerankings.LeagueRankings(l)
-# r.rank()
-# print(r)
+l = League('nfl', '2018', '1067871')
+r = rankings.LeagueRankings(l)
+r.rank()
+print(l)
