@@ -26,7 +26,7 @@ class Auth:
             'redirect_uri': 'oob',
             'headers': {
                 'Authorization': BASIC_AUTH,
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/x-www-forms-urlencoded'
             }
         }
         self.access_token = requests.post(TOKEN_URL, data).json()['access_token']

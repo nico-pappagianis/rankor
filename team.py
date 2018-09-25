@@ -19,6 +19,7 @@ class Team:
         self.team_key = team_key
         self.name = name
 
+
     def __str__(self):
         return 'Team {team_id}: {name}'.format(team_id=self.team_id, name=self.name)
 

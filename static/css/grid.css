@@ -1,0 +1,69 @@
+
+html body {
+    background-color: #A2AEA8;
+}
+
+
+.text-light {
+    color: #DAD7CD !important;
+}
+
+.container-fluid {
+    background-color: transparent;
+}
+
+.week-header {
+    background-color: #588157 !important;
+}
+
+.season-header {
+    background-color: #3A5A40 !important;
+}
+
+.rank-increase {
+    color: green;
+}
+
+.rank-decrease {
+    color: darkred;
+}
+
+.rank-no-change {
+    color: black;
+}
+
+.rank-change-arrow {
+    font-weight: normal;
+    font-size: medium;
+}
+
+
+.col-highlight {
+    background-color: darkgray;
+}
+
+.big-text {
+    font-size: large;
+    font-weight: bolder;
+}
+
+.col-team {
+    background-color: lightgray;
+    font-weight: bold;
+}
+
+.card, .card-body, .card-text {
+    background-color: transparent;
+}
+
+.bg-dark {
+    background-color: #2F3C28 !important;
+}
+
+
+.row-team {
+    background-color: lightgrey;
+    border-color: transparent;
+    font-size: medium;
+    font-weight: bold;
+}

@@ -1,8 +1,8 @@
 import functools
 import json
 import os
-import _pickle
-from http import HTTPStatus
+import pickle
+import http
 from urllib.parse import urljoin
 
 import requests
@@ -33,7 +33,7 @@ class FantasyData(object):
         query = urljoin(YAHOO_API_URL, self._api_query)
         res = requests.get(query, params={'format': 'xml'}, headers=self.headers())
 
-        if retry and res.status_code == HTTPStatus.UNAUTHORIZED:
+        if retry and res.status_code == http.HTTPStatus.UNAUTHORIZED:
             self.auth.refresh_access_token()
             return self._get(retry=False)
 
@@ -47,14 +47,13 @@ def save(obj, dirname, filename):
     os.makedirs(dirname, exist_ok=True)
     path = os.path.join(dirname, filename)
     with open(path, 'wb') as data_file:
-        _pickle.dump(obj, data_file)
+        pickle.dump(obj, data_file)
 
 
-def load(obj, path):
+def load(path):
     if os.path.exists(path):
-        obj = _pickle.load(open(path, 'rb'))
-        return True
-    return False
+        return pickle.load(open(path, 'rb'))
+    return None
 
 
 def get_attribute(obj, attr, *args):

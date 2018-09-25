@@ -1,6 +1,9 @@
 flask
+flask-bootstrap4
+flask-wtf
 configparser
 requests
 untangle
 _pickle
 bidict
+Flask-Assets

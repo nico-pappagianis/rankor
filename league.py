@@ -2,9 +2,9 @@ import logging
 import os
 
 from data_attributes import LeagueAttrs, GameAttrs
+from fantasy_data import FantasyData, load, save
 from matchup import WeekMatchups
 from team import TeamData
-from fantasy_data import FantasyData, load, save
 
 GAMES_DATA_DIR = os.path.join('data', 'games')
 GAME_CODE_DATA_DIR = os.path.join(GAMES_DATA_DIR, '{game_code}')
@@ -31,7 +31,9 @@ class League:
         self.data_filename = LEAGUE_DATA_FILE
         self.data_path = os.path.join(self.data_dir, self.data_filename)
 
-        if load(self, self.data_path):
+        league = load(self.data_path)
+        if league:
+            self.__dict__ = league.__dict__
             return
         else:
             league_data = LeagueData(game_code, season, league_id)
