@@ -1,5 +1,7 @@
 import os
-from enum import Enum
+import pytz
+from datetime import datetime, timedelta, timezone
+from enum import Enum, IntEnum
 
 from data_attributes import MatchupAttrs, TeamAttrs
 from fantasy_data import FantasyData, get_attribute
@@ -10,6 +12,44 @@ WEEK_MATCHUPS_FILE = 'week-{week}.data'
 WEEK_MATCHUPS_QUERY = 'league/{league_key}/scoreboard;week={week}'
 TEAM_MATCHUP_QUERY = 'team/{team_key}/matchups'
 
+class GameWeekMatchups:
+    def __init__(self, game_week, matchups=None):
+        self.game_week = game_week
+        self.matchups = matchups or []
+
+    def add_matchup(self, matchup):
+        self.matchups.append(matchup)
+
+
+class GameWeek:
+    class Days(IntEnum):
+        MONDAY = 0
+        TUESDAY = 1
+        WEDNESDAY = 2
+        THURSDAY = 3
+        FRIDAY = 4
+        SATURDAY = 5
+        SUNDAY = 6
+
+    def __init__(self, week, start_datetime, end_datetime):
+        self.week = week
+        self.start_date = GameWeek._get_start_datetime(start_datetime)
+        self.end_date = GameWeek._get_end_datetime(end_datetime)
+
+    @staticmethod
+    def _get_start_datetime(start_datetime):
+        itr_datetime = pytz.timezone('US/Pacific').localize(start_datetime)
+        while itr_datetime.weekday() != GameWeek.Days.THURSDAY.value:
+            itr_datetime += timedelta(1)
+        return itr_datetime.replace(hour=17, minute=20)
+
+    @staticmethod
+    def _get_end_datetime(end_datetime):
+        itr_datetime = pytz.timezone('US/Pacific').localize(end_datetime)
+        while itr_datetime.weekday() != GameWeek.Days.TUESDAY.value:
+            itr_datetime += timedelta(1)
+        return itr_datetime.replace(hour=00, minute=00)
+
 
 class Matchup:
     class Status(Enum):
@@ -19,6 +59,9 @@ class Matchup:
 
     def __init__(self, league, matchup_data):
         self.week = matchup_data.week.cdata
+        self.start_date = datetime.strptime(matchup_data.week_start.cdata, '%Y-%m-%d')
+        self.end_date = datetime.strptime(matchup_data.week_end.cdata, '%Y-%m-%d')
+
         self.status = Matchup.Status(matchup_data.status)
 
         teams = get_attribute(matchup_data, MatchupAttrs.MATCHUP_TEAMS)

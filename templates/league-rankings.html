@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script>
+        $(function () {
+            $("#accordion").accordion();
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    {% include 'week-ranks.html' %}
+    {% include 'season-ranks.html' %}
+{% endblock %}

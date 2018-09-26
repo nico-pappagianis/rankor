@@ -1,6 +1,6 @@
 import decimal
 from enum import Enum
-
+from datetime import datetime
 from matchup import Matchup
 
 
@@ -30,6 +30,9 @@ class LeagueRankings:
         self.outscore_value = outscore_value
         self.league = league
         self.week_ranks = {}
+
+        from matchup import GameWeek
+        g = GameWeek(self.league.current_week, self.league.week_matchups[1][0].start_date, self.league.week_matchups[1][0].end_date)
 
         self.set_week_ranks()
         self.season_ranks = self.get_season_ranks()
@@ -67,9 +70,8 @@ class LeagueRankings:
                     continue
 
                 if rank.status == Matchup.Status.MID_EVENT:
-                    # self.in_progress = True
                     if not include_in_progress:
-                         continue
+                        continue
 
                 team_id = rank.team.team_id
                 season_ranks[team_id].wins += rank.win * 1

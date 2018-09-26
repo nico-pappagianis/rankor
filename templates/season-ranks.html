@@ -1,0 +1,144 @@
+<div class="container-fluid">
+    <div class="flex-row justify-content-lg-center d-lg-flex">
+
+        <div class="card flex-card border-0" style="min-width: 740px;">
+            <div class="card-title font-weight-bold btn header-style text-left text-lg-center"
+                 data-toggle="collapse" data-target="#season-ranks-collapse"
+                 aria-expanded="true" aria-controls="season-ranks-collapse">
+
+                <span class="fa-stack fa-3x">
+                          <i class="fa fa-circle-o fa-stack-2x"></i>
+                              <strong class="fa-stack-1x"><i class="fa fa-trophy"></i></strong>
+                </span>
+
+                {% if rankings.in_progress %}
+                    <span class="font-italic">Games In Progress! In-progress ranks are shown as the second team in each row</span>
+                {% endif %}
+            </div>
+
+
+            <div class="collapse show" id="season-ranks-collapse">
+                <div class="card-header border-0 header-style">
+                    <div class="row flex-row d-flex flex-nowrap align-items-end justify-content-end text-center m-auto">
+                        <div class="col flex-column">
+                            Rank
+                        </div>
+                        <div class="col-3 flex-column">
+                            Team
+                        </div>
+                        <div class="col flex-column">
+                            $$
+                        </div>
+                        <div class="col-2 flex-column">
+                            W-L
+                        </div>
+                        <div class="col flex-column">
+                            Avg Rank
+                        </div>
+                        <div class="col flex-column">
+                            O/S
+                        </div>
+                        <div class="col flex-column">
+                            Avg O/S
+                        </div>
+                    </div>
+                </div>
+
+                {% for current_rank, progress_rank in rankings.sorted_season_ranks | zip(rankings.sorted_season_ranks_in_progress) %}
+
+                    {% set progress_team_id = progress_rank[1].team.team_id %}
+                    {% set direction = rankings.in_progress_rank_changes[progress_team_id].direction %}
+
+                    {% if direction == RankChange.Direction.UP %}
+                        {% set color_class = "rank-increase" %}
+                        {% set arrow_class = "oi oi-arrow-top up-arrow" %}
+                    {% elif direction == RankChange.Direction.DOWN %}
+                        {% set color_class = "rank-decrease" %}
+                        {% set arrow_class = "oi oi-arrow-bottom down-arrow" %}
+                    {% else %}
+                        {% set color_class = "text-dark" %}
+                        {% set arrow_class = "oi oi-minus no-arrow" %}
+                    {% endif %}
+
+                    <div class="card-body">
+                        <div class="row flex-row d-flex flex-nowrap align-items-end m-auto">
+                            <div class="col flex-column">
+                                {{ current_rank[1].overall_rank }}
+                            </div>
+
+                            <div class="col-3 flex-column text-ellipsis">
+                                {{ current_rank[1].team.name }}
+                                {% if rankings.in_progress %}
+                                    <div class="row flex-row d-flex {{ color_class }}">
+                                        <div class="col-3 flex-column text-ellipsis">
+                                            {{ progress_rank[1].team.name }}
+                                            <span class="rank-change-arrow {{ arrow_class }}">
+                                                {{ rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col flex-column">
+                                {{ current_rank[1].ranking_points }}
+                                {% if rankings.in_progress %}
+                                    <div class="row flex-row d-flex {{ color_class }}">
+                                        <div class="col flex-column">
+                                            {{ progress_rank[1].ranking_points }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col-2 flex-column">
+                                {{ current_rank[1].wins }}-{{ current_rank[1].losses }}{{ '-' ~ current_rank[1].draws if current_rank[1].draws else '' }}
+                                {% if rankings.in_progress %}
+                                    <div class="row flex-row d-flex {{ color_class }}">
+                                        <div class="col-2 flex-column">
+                                            {{ progress_rank[1].wins }}-{{ progress_rank[1].losses }}{{ '-' ~ progress_rank[1].draws if progress_rank[1].draws else '' }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col flex-column">
+                                {{ current_rank[1].avg_rank }}
+                                {% if rankings.in_progress %}
+                                    <div class="row flex-row d-flex {{ color_class }}">
+                                        <div class="col flex-column">
+                                            {{ progress_rank[1].avg_rank }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+
+                            <div class="col flex-column">
+                                {{ current_rank[1].outscores }}
+                                {% if rankings.in_progress %}
+                                    <div class="row flex-row d-flex {{ color_class }}">
+                                        <div class="col flex-column">
+                                            {{ progress_rank[1].outscores }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="col flex-column">
+                                {{ current_rank[1].avg_outscores }}
+                                {% if rankings.in_progress %}
+                                    <div class="row flex-row d-flex {{ color_class }}">
+                                        <div class="col flex-column">
+                                            {{ progress_rank[1].avg_outscores }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

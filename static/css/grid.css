@@ -1,69 +1,94 @@
 
-html body {
-    background-color: #A2AEA8;
+.text-ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: medium;
+}
+
+.flex-card {
+    display: inline-flex !important;
+}
+
+.header-style {
+    background-color: lightslategray !important;
+    font-weight: bold !important;
+    color: #f8f9fa !important
+}
+
+.card-title {
+    font-size: larger;
+    font-weight: bolder;
 }
 
 
-.text-light {
-    color: #DAD7CD !important;
+.card-body {
+    background-color: lightgray;
+    font-weight: bold;
 }
 
-.container-fluid {
-    background-color: transparent;
-}
+/*html body {*/
+/*background-color: #A2AEA8;*/
+/*}*/
 
-.week-header {
-    background-color: #588157 !important;
-}
+/*.text-light {*/
+/*color: #DAD7CD !important;*/
+/*}*/
 
-.season-header {
-    background-color: #3A5A40 !important;
-}
+/*.container-fluid {*/
+/*background-color: transparent;*/
+/*}*/
 
-.rank-increase {
-    color: green;
-}
+/*.week-header {*/
+/*background-color: #588157 !important;*/
+/*}*/
 
-.rank-decrease {
-    color: darkred;
-}
+/*.season-header {*/
+/*background-color: #3A5A40 !important;*/
+/*}*/
 
-.rank-no-change {
-    color: black;
-}
+/*.rank-increase {*/
+/*color: green;*/
+/*}*/
+
+/*.rank-decrease {*/
+/*color: darkred;*/
+/*}*/
+
+/*.rank-no-change {*/
+/*color: black;*/
+/*}*/
 
 .rank-change-arrow {
     font-weight: normal;
     font-size: medium;
 }
 
+/*.col-highlight {*/
+/*background-color: darkgray;*/
+/*}*/
 
-.col-highlight {
-    background-color: darkgray;
-}
+/*.big-text {*/
+/*font-size: large;*/
+/*font-weight: bolder;*/
+/*}*/
 
-.big-text {
-    font-size: large;
-    font-weight: bolder;
-}
+/*.col-team {*/
+/*background-color: lightgray;*/
+/*font-weight: bold;*/
+/*}*/
 
-.col-team {
-    background-color: lightgray;
-    font-weight: bold;
-}
+/*.card, .card-body, .card-text {*/
+/*background-color: transparent;*/
+/*}*/
 
-.card, .card-body, .card-text {
-    background-color: transparent;
-}
+/*.bg-dark {*/
+/*background-color: #2F3C28 !important;*/
+/*}*/
 
-.bg-dark {
-    background-color: #2F3C28 !important;
-}
-
-
-.row-team {
-    background-color: lightgrey;
-    border-color: transparent;
-    font-size: medium;
-    font-weight: bold;
-}
+/*.row-team {*/
+/*background-color: lightgrey;*/
+/*border-color: transparent;*/
+/*font-size: medium;*/
+/*font-weight: bold;*/
+/*}*/
