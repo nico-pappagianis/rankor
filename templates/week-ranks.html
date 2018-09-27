@@ -1,16 +1,16 @@
-<div class="container-fluid">
+<div class="container-fluid pl-0">
     {% for week, week_ranks in rankings.week_ranks.items() %}
 
         {% set week_collapse_id = 'week-{week}-ranks-collapse'.format(week=week) %}
 
         <div class="flex-row justify-content-lg-center d-lg-flex">
 
-            <div class="card flex-card border-0" style="min-width: 740px;">
+            <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;">
                 <div class="card-title font-weight-bold btn header-style text-left text-lg-center"
                      data-toggle="collapse" data-target="#{{ week_collapse_id }}"
                      aria-expanded="false" aria-controls="{{ week_collapse_id }}">
-                        <span class="fa-stack fa-3x">
-                          <i class="fa fa-circle-o fa-stack-2x"></i>
+                        <span class="fa-stack fa-3x" style="color:ghostwhite;">
+                          <i class="far fa-circle fa-stack-2x"></i>
                           <strong class="fa-stack-1x">{{ week }}</strong>
                         </span>
                 </div>

@@ -24,6 +24,9 @@ class LeagueAttrs:
 
 class MatchupAttrs:
     WEEK_MATCHUPS = join(LeagueAttrs.WEEK_SCOREBOARD, 'matchups.matchup')
+    WEEK_START_DATE = 'week_start.cdata'
+    WEEK_END_DATE = 'week_end.cdata'
+    STATUS = 'status.cdata'
     MATCHUP_TEAMS = 'teams.team'
     MATCHUP_TEAM_POINTS = 'team_points.total.cdata'
 

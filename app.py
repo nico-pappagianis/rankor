@@ -34,10 +34,14 @@ def index():
     return render_template('home.html', league_form=league_form)
 
 
-@app.route('/league', methods=['POST'])
-def league():
-    league = League(game_code=request.form['game_code'], season=request.form['season'],
-                    league_id=request.form['league_id'])
+@app.route('/rank', methods=['POST'])
+@app.route('/rank/<game_code>/<season>/<league_id>', methods=['GET'])
+def rank(game_code=None, season=None, league_id=None):
+    if request.method == 'GET':
+        league = League(game_code, season, league_id)
+    else:
+        league = League(game_code=request.form['game_code'], season=request.form['season'],
+                        league_id=request.form['league_id'])
     rankings = LeagueRankings(league, 10, 5, 1)
     return render_template('league-rankings.html', league=league, rankings=rankings, RankChange=RankChange)
 

@@ -3,5 +3,4 @@ flask-bootstrap4
 flask-wtf
 requests
 untangle
-_pickle
 pytz

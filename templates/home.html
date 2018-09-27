@@ -6,7 +6,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-4 font-weight-bold">
-                <form method="POST" action="{{ url_for('league') }}">
+                <form method="POST" action="{{ url_for('rank') }}">
                     {{ wtf.form_field(league_form.game_code) }}
                     {{ wtf.form_field(league_form.season) }}
                     {{ wtf.form_field(league_form.league_id) }}

@@ -1,7 +1,7 @@
 import decimal
 from enum import Enum
 from datetime import datetime
-from matchup import Matchup
+from matchup import GameWeek
 
 
 class RankChange:
@@ -24,15 +24,12 @@ class RankChange:
 class LeagueRankings:
     def __init__(self, league, win_value, draw_value, outscore_value):
         decimal.getcontext().prec = 3
-        self.in_progress = False
+        self.in_progress = league.game_weeks[league.current_week].status == GameWeek.Status.MID_EVENT
         self.win_value = win_value
         self.draw_value = draw_value
         self.outscore_value = outscore_value
         self.league = league
         self.week_ranks = {}
-
-        from matchup import GameWeek
-        g = GameWeek(self.league.current_week, self.league.week_matchups[1][0].start_date, self.league.week_matchups[1][0].end_date)
 
         self.set_week_ranks()
         self.season_ranks = self.get_season_ranks()
@@ -66,10 +63,10 @@ class LeagueRankings:
 
             for rank in week_ranks:
 
-                if rank.status == Matchup.Status.PRE_EVENT:
+                if rank.status == GameWeek.Status.PRE_EVENT:
                     continue
 
-                if rank.status == Matchup.Status.MID_EVENT:
+                if rank.status == GameWeek.Status.MID_EVENT:
                     if not include_in_progress:
                         continue
 
@@ -92,11 +89,12 @@ class LeagueRankings:
 
     def set_week_ranks(self):
         self.week_ranks = {}
-        for week, matchups in self.league.week_matchups.items():
-            for matchup in matchups:
+        for week, game_week in self.league.game_weeks.items():
 
-                if matchup.status == Matchup.Status.PRE_EVENT:
-                    continue
+            if game_week.status == GameWeek.Status.PRE_EVENT:
+                continue
+
+            for matchup in game_week.matchups:
 
                 if week not in self.week_ranks:
                     self.week_ranks[week] = []
@@ -117,9 +115,9 @@ class LeagueRankings:
                     team2.draws += 1
 
                 self.week_ranks[week].append(
-                    WeekRank(week, matchup.status, team1, team2, matchup.team1_points, matchup.team2_points))
+                    WeekRank(week, game_week.status, team1, team2, matchup.team1_points, matchup.team2_points))
                 self.week_ranks[week].append(
-                    WeekRank(week, matchup.status, team2, team1, matchup.team2_points, matchup.team1_points))
+                    WeekRank(week, game_week.status, team2, team1, matchup.team2_points, matchup.team1_points))
 
             if week in self.week_ranks:
                 self.rank_teams(week)

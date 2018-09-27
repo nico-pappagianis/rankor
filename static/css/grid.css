@@ -21,10 +21,23 @@
     font-weight: bolder;
 }
 
-
 .card-body {
     background-color: lightgray;
     font-weight: bold;
+}
+
+sub {
+    font-size: x-small !important;
+    vertical-align: sub !important
+}
+
+sup {
+    font-size: x-small !important;
+    vertical-align: sub !important
+}
+
+.icon:before {
+    font-family: "Font Awesome 5 Free" !important;
 }
 
 /*html body {*/
@@ -47,17 +60,17 @@
 /*background-color: #3A5A40 !important;*/
 /*}*/
 
-/*.rank-increase {*/
-/*color: green;*/
-/*}*/
+.rank-increase {
+color: green;
+}
 
-/*.rank-decrease {*/
-/*color: darkred;*/
-/*}*/
+.rank-decrease {
+color: darkred;
+}
 
-/*.rank-no-change {*/
-/*color: black;*/
-/*}*/
+.rank-no-change {
+color: #343a40;
+}
 
 .rank-change-arrow {
     font-weight: normal;

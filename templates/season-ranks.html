@@ -1,29 +1,26 @@
-<div class="container-fluid">
+<div class="container-fluid pl-0">
     <div class="flex-row justify-content-lg-center d-lg-flex">
 
-        <div class="card flex-card border-0" style="min-width: 740px;">
+        <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;">
             <div class="card-title font-weight-bold btn header-style text-left text-lg-center"
                  data-toggle="collapse" data-target="#season-ranks-collapse"
                  aria-expanded="true" aria-controls="season-ranks-collapse">
 
-                <span class="fa-stack fa-3x">
-                          <i class="fa fa-circle-o fa-stack-2x"></i>
-                              <strong class="fa-stack-1x"><i class="fa fa-trophy"></i></strong>
-                </span>
+             <i class="fa fa-trophy fa-5x" style="color: gold"></i>
 
                 {% if rankings.in_progress %}
-                    <span class="font-italic">Games In Progress! In-progress ranks are shown as the second team in each row</span>
+                    <i style="color: gold">Games In Progress! Live ranks shown on second line.</i>
                 {% endif %}
             </div>
 
 
             <div class="collapse show" id="season-ranks-collapse">
                 <div class="card-header border-0 header-style">
-                    <div class="row flex-row d-flex flex-nowrap align-items-end justify-content-end text-center m-auto">
+                    <div class="row flex-row d-flex flex-nowrap align-items-center  text-center">
                         <div class="col flex-column">
                             Rank
                         </div>
-                        <div class="col-3 flex-column">
+                        <div class="col-4 flex-column">
                             Team
                         </div>
                         <div class="col flex-column">
@@ -57,25 +54,39 @@
                         {% set arrow_class = "oi oi-arrow-bottom down-arrow" %}
                     {% else %}
                         {% set color_class = "text-dark" %}
-                        {% set arrow_class = "oi oi-minus no-arrow" %}
+                        {% set arrow_class = "fas fa-equals" %}
                     {% endif %}
 
+                    {% set arrow_class = arrow_class + ' ' + color_class %}
+
                     <div class="card-body">
-                        <div class="row flex-row d-flex flex-nowrap align-items-end m-auto">
+                        <div class="row flex-row d-flex flex-nowrap align-items-center text-center">
                             <div class="col flex-column">
                                 {{ current_rank[1].overall_rank }}
                             </div>
 
-                            <div class="col-3 flex-column text-ellipsis">
-                                {{ current_rank[1].team.name }}
+                            <div class="col-4 flex-column">
+                                <div class="col flex-column">
+                                    <div class="text-ellipsis">
+                                        <b class="rank-change-arrow {{ arrow_class }}"
+                                           style="font-size: small; color: transparent!important;"></b>
+                                        <b class="small">
+                                            {{ rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior or '' }}
+                                        </b>
+                                        {{ current_rank[1].team.name }}
+                                    </div>
+                                </div>
                                 {% if rankings.in_progress %}
-                                    <div class="row flex-row d-flex {{ color_class }}">
-                                        <div class="col-3 flex-column text-ellipsis">
+
+                                    <div class="col flex-column flex-nowrap {{ color_class }}">
+                                        <div class="text-ellipsis">
+                                            <b class="rank-change-arrow {{ arrow_class }}" style="font-size: small"></b>
+                                            <b class="small">
+                                                {{ rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior or '' }}
+                                            </b>
                                             {{ progress_rank[1].team.name }}
-                                            <span class="rank-change-arrow {{ arrow_class }}">
-                                                {{ rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior }}
-                                            </span>
                                         </div>
+
                                     </div>
                                 {% endif %}
                             </div>
@@ -95,7 +106,7 @@
                                 {{ current_rank[1].wins }}-{{ current_rank[1].losses }}{{ '-' ~ current_rank[1].draws if current_rank[1].draws else '' }}
                                 {% if rankings.in_progress %}
                                     <div class="row flex-row d-flex {{ color_class }}">
-                                        <div class="col-2 flex-column">
+                                        <div class="col flex-column">
                                             {{ progress_rank[1].wins }}-{{ progress_rank[1].losses }}{{ '-' ~ progress_rank[1].draws if progress_rank[1].draws else '' }}
                                         </div>
                                     </div>

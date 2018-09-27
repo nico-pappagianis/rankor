@@ -11,6 +11,11 @@
 {% endblock %}
 
 {% block content %}
+    <div class="h3 text-center justify-content-center align-items-center font-weight-bold"
+         style="color: slategray">
+        <strong>{{ league.name }}</strong>
+    </div>
     {% include 'week-ranks.html' %}
     {% include 'season-ranks.html' %}
+
 {% endblock %}

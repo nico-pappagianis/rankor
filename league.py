@@ -3,7 +3,7 @@ import os
 
 from data_attributes import LeagueAttrs, GameAttrs
 from fantasy_data import FantasyData, load, save
-from matchup import WeekMatchups
+from matchup import MatchupsData
 from team import TeamData
 
 GAMES_DATA_DIR = os.path.join('data', 'games')
@@ -40,7 +40,7 @@ class League:
 
         self.num_regular_season_games = None
         self.overall_results = {}
-        self.week_matchups = {}
+        self.game_weeks = {}
         self.teams = {}
 
         self.game_code = league_data.game_code
@@ -61,12 +61,12 @@ class League:
         self.teams = TeamData(self).teams
 
         for week in range(self.start_week, self.end_week + 1):
-            matchups = WeekMatchups(self, week).matchups
-            if not matchups:
+            game_week = MatchupsData(self, week).game_week
+            if not game_week:
                 if not self.num_regular_season_games:
                     self.num_regular_season_games = week - 1
             else:
-                self.week_matchups[week] = matchups
+                self.game_weeks[week] = game_week
 
         save(self, self.data_dir, self.data_filename)
 
