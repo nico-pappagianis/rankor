@@ -1,5 +1,10 @@
 {% extends "bootstrap/base.html" %}
 
+{% block head %}
+    {{ super() }}
+    <meta name="viewport" content="width=device-width">
+{% endblock %}
+
 {% block scripts %}
     {{ super() }}
 
@@ -14,13 +19,44 @@
             integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
             crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
 
     <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
     <script src="http://code.jquery.com/ui/1.8.21/jquery-ui.min.js"></script>
 
     <script type='text/javascript' src='/static/js/touchpunch.js'></script>
+    <script type='text/javascript' src='/static/js/update.js'></script>
+
+
+    <script type="text/javascript">
+
+        $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+        $('.tooltip-container').on("touchstart", function (e) {
+            "use strict"; //satisfy the code inspectors
+            var link = $(this); //preselect the link
+            if (link.hasClass('hasHover')) {
+                return true;
+            } else {
+                link.addClass("hasHover");
+                $('.tooltip-container').not(this).removeClass("hasHover");
+                e.preventDefault();
+                return false; //extra, and to make sure the function has consistent return points
+            }
+        });
+
+        $("html").on("touchstart", function (e) {
+            "use strict";
+            if ($(e.target).hasClass(".tooltip-container")) {
+                return false;
+            }
+            $(".tooltip-container").removeClass("hasHover");
+            return true;
+        });
+
+    </script>
 
 {% endblock %}
 

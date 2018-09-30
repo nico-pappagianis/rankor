@@ -1,10 +1,8 @@
 import os
 from datetime import datetime, timedelta
 from enum import Enum, IntEnum
-
-import pytz
-
-from data_attributes import MatchupAttrs, TeamAttrs
+from serializable import Serializable
+from data_attributes import MatchupAttrs, TeamAttrs, DATE_FMT, PST
 from fantasy_data import FantasyData, get_attribute
 
 SEASON_MATCHUPS_FILE = os.path.join('{league_data_dir}', 'season-matchups.data')
@@ -13,10 +11,8 @@ WEEK_MATCHUPS_FILE = 'week-{week}.data'
 WEEK_MATCHUPS_QUERY = 'league/{league_key}/scoreboard;week={week}'
 TEAM_MATCHUP_QUERY = 'team/{team_key}/matchups'
 
-PST = pytz.timezone('US/Pacific')
 
-
-class GameWeek:
+class Week(Serializable):
     class Days(IntEnum):
         MONDAY = 0
         TUESDAY = 1
@@ -26,15 +22,67 @@ class GameWeek:
         SATURDAY = 5
         SUNDAY = 6
 
+    def __init__(self, week, week_start_time, week_end_time):
+        super(Week, self).__init__()
+        self.week = week
+        self.week_start_time = PST.localize(week_start_time)
+        self.week_end_time = PST.localize(week_end_time)
+
+        self.thursday_start_time = self._get_thursday_start_time()
+        self.thursday_end_time = self._get_thursday_end_time()
+
+        self.sunday_start_time = self._get_sunday_start_time()
+        self.sunday_end_time = self._get_sunday_end_time()
+
+        self.monday_start_time = self._get_monday_start_time()
+        self.monday_end_time = self._get_monday_end_time()
+
+    def __get_thursday(self):
+        itr_datetime = self.week_start_time
+        while itr_datetime.weekday() != Week.Days.THURSDAY.value:
+            itr_datetime += timedelta(1)
+        return itr_datetime
+
+    def __get_sunday(self):
+        itr_datetime = self.week_start_time
+        while itr_datetime.weekday() != Week.Days.SUNDAY.value:
+            itr_datetime += timedelta(1)
+        return itr_datetime
+
+    def __get_monday(self):
+        itr_datetime = self.week_start_time
+        while itr_datetime.weekday() != Week.Days.MONDAY.value:
+            itr_datetime += timedelta(1)
+        return itr_datetime
+
+    def _get_thursday_start_time(self):
+        return self.__get_thursday().replace(hour=17, minute=20)
+
+    def _get_thursday_end_time(self):
+        return self.__get_thursday().replace(hour=23, minute=59, second=59)
+
+    def _get_sunday_start_time(self):
+        return self.__get_sunday().replace(hour=10, minute=00)
+
+    def _get_sunday_end_time(self):
+        return self.__get_sunday().replace(hour=23, minute=59, second=59)
+
+    def _get_monday_start_time(self):
+        return self.__get_monday().replace(hour=17, minute=15)
+
+    def _get_monday_end_time(self):
+        return self.__get_monday().replace(hour=23, minute=59, second=59)
+
+
+class GameWeek(Serializable):
     class Status(Enum):
         POST_EVENT = 'postevent'
         PRE_EVENT = 'preevent'
         MID_EVENT = 'midevent'
 
     def __init__(self, week, start_datetime, end_datetime, matchups=None):
-        self.week = week
-        self.start_date = GameWeek._get_start_datetime(start_datetime)
-        self.end_date = GameWeek._get_end_datetime(end_datetime)
+        super(GameWeek, self).__init__()
+        self.week = Week(week, start_datetime, end_datetime)
         self.matchups = matchups or []
 
     def add_matchup(self, matchup):
@@ -43,31 +91,29 @@ class GameWeek:
     @property
     def status(self):
         now = PST.localize(datetime.now())
-        if now < self.start_date:
+        if now < self.week.thursday_start_time:
             return GameWeek.Status.PRE_EVENT
-        elif self.start_date <= now <= self.end_date:
+        elif self.week.thursday_start_time <= now <= self.week.monday_end_time:
             return GameWeek.Status.MID_EVENT
         else:
             return GameWeek.Status.POST_EVENT
 
-    @staticmethod
-    def _get_start_datetime(start_datetime):
-        itr_datetime = PST.localize(start_datetime)
-        while itr_datetime.weekday() != GameWeek.Days.THURSDAY.value:
-            itr_datetime += timedelta(1)
-        return itr_datetime.replace(hour=17, minute=20)
+    @property
+    def week_in_progress(self):
+        return self.status == GameWeek.Status.MID_EVENT
 
-    @staticmethod
-    def _get_end_datetime(end_datetime):
-        itr_datetime = PST.localize(end_datetime)
-        while itr_datetime.weekday() != GameWeek.Days.TUESDAY.value:
-            itr_datetime += timedelta(1)
-        return itr_datetime.replace(hour=00, minute=00)
+    @property
+    def games_in_progress(self):
+        now = PST.localize(datetime.now())
+        return (self.week.thursday_start_time <= now <= self.week.thursday_end_time) or (
+                self.week.sunday_start_time <= now <= self.week.sunday_end_time) or (
+                       self.week.monday_start_time <= now <= self.week.monday_end_time)
 
 
-class Matchup:
+class Matchup(Serializable):
 
     def __init__(self, week, team1, team1_points, team2, team2_points):
+        super(Matchup, self).__init__()
         self.week = week
         self.team1 = team1
         self.team1_points = team1_points
@@ -92,8 +138,8 @@ class MatchupsData(FantasyData):
         for matchup_data in matchups_data:
 
             if not self.game_week:
-                start_date = datetime.strptime(get_attribute(matchup_data, MatchupAttrs.WEEK_START_DATE), '%Y-%m-%d')
-                end_date = datetime.strptime(get_attribute(matchup_data, MatchupAttrs.WEEK_END_DATE), '%Y-%m-%d')
+                start_date = datetime.strptime(get_attribute(matchup_data, MatchupAttrs.WEEK_START_DATE), DATE_FMT)
+                end_date = datetime.strptime(get_attribute(matchup_data, MatchupAttrs.WEEK_END_DATE), DATE_FMT)
                 self.game_week = GameWeek(week, start_date, end_date)
 
             teams = get_attribute(matchup_data, MatchupAttrs.MATCHUP_TEAMS)

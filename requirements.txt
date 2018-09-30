@@ -4,3 +4,5 @@ flask-wtf
 requests
 untangle
 pytz
+jsonpickle
+jsonconversion

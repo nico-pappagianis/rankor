@@ -1,11 +1,14 @@
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify, Response
 from flask_bootstrap import Bootstrap
-
+import jsonpickle
 import forms
 from league import League
 from rankings import LeagueRankings, RankChange
+from jsonconversion.decoder import JSONObjectDecoder
+from jsonconversion.encoder import JSONObjectEncoder
+import json
 
 app = Flask(__name__)
 app.jinja_env.filters['zip'] = zip
@@ -43,7 +46,13 @@ def rank(game_code=None, season=None, league_id=None):
         league = League(game_code=request.form['game_code'], season=request.form['season'],
                         league_id=request.form['league_id'])
     rankings = LeagueRankings(league, 10, 5, 1)
-    return render_template('league-rankings.html', league=league, rankings=rankings, RankChange=RankChange)
+    return render_template('league-rankings.html', league=league, rankings=rankings, RankChange=RankChange, jsonpickle=jsonpickle)
+
+
+@app.route('/update_in_progress_games')
+def update_in_progress_games():
+    league_data_path = request.args.get('league_data_path')
+    return jsonify(json.dumps(League.get_in_progress_data(league_data_path)))
 
 
 if __name__ == '__main__':

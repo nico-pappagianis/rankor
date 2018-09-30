@@ -1,3 +1,4 @@
+from serializable import Serializable
 from flask import Blueprint, request, sessions
 import requests
 
@@ -11,9 +12,10 @@ CODE = '9hvuzj8'
 BASIC_AUTH = 'Basic ' + KEY + ':' + SECRET
 
 
-class Auth:
+class Auth(Serializable):
 
     def __init__(self):
+        super(Auth, self).__init__()
         self.access_token = None
 
     def refresh_access_token(self):

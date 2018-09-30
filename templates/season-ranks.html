@@ -2,46 +2,131 @@
     <div class="flex-row justify-content-lg-center d-lg-flex">
 
         <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;">
-            <div class="card-title font-weight-bold btn header-style text-left text-lg-center"
+            <div class="card-title font-weight-bold btn header-style text-center text-lg-center"
                  data-toggle="collapse" data-target="#season-ranks-collapse"
                  aria-expanded="true" aria-controls="season-ranks-collapse">
 
-             <i class="fa fa-trophy fa-5x" style="color: gold"></i>
+                <i class="fa fa-trophy fa-5x" style="color: gold"></i>
 
                 {% if rankings.in_progress %}
-                    <i style="color: gold">Games In Progress! Live ranks shown on second line.</i>
+                    <div class="row flex-row d-flex flex-nowrap align-items-center justify-content-center">
+                        <div class="col flex-column">
+                            <i style="color: gold">Week in progress! Live ranks shown on second line.</i>
+                        </div>
+                    </div>
                 {% endif %}
             </div>
 
 
             <div class="collapse show" id="season-ranks-collapse">
                 <div class="card-header border-0 header-style">
-                    <div class="row flex-row d-flex flex-nowrap align-items-center  text-center">
+                    <div class="row flex-row d-flex flex-nowrap align-items-center text-center">
                         <div class="col flex-column">
-                            Rank
+                            <div class="tooltip-container">
+                                <strong>Rank<sup><strong class="far fa-question-circle"></strong></sup></strong>
+
+                                <div class="tooltip-hover" aria-hidden="true">
+                                    <span class="tooltip-content" style="width:200px; position:relative; left: 50px">
+                                        Numerical position in the league standings. Smaller is better.
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-4 flex-column">
-                            Team
+                            <div class="tooltip-container">
+                                <strong>Team<sup><strong class="far fa-question-circle"></strong></sup></strong>
+
+                                <div class="tooltip-hover" aria-hidden="true">
+                                    <span class="tooltip-content" style="width:200px">
+                                        The team represented by this postition in the standings.
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         <div class="col flex-column">
-                            $$
+                            <div class="tooltip-container">
+                                <strong>$$<sup><strong class="far fa-question-circle"></strong></sup></strong>
+
+                                <div class="tooltip-hover" aria-hidden="true">
+                                    <span class="tooltip-content" style="width:200px;">
+                                        Ranking Point ($$) season total.
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-2 flex-column">
-                            W-L
+                            <div class="tooltip-container">
+                                <strong>W-L<sup><strong class="far fa-question-circle"></strong></sup></strong>
+
+                                <div class="tooltip-hover" aria-hidden="true">
+                                    <span class="tooltip-content" style="width:200px;">
+                                        Win-loss-draw record.
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         <div class="col flex-column">
-                            Avg Rank
+                            <div class="tooltip-container">
+                                <strong class="far fa-question-circle"></strong><strong>Avg Rank</strong>
+
+                                <div class="tooltip-hover" aria-hidden="true">
+                                    <span class="tooltip-content" style="width:200px;">
+                                        Average postition in overall weekly scoring. Smaller is better.
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         <div class="col flex-column">
-                            O/S
+                            <div class="tooltip-container">
+                                <strong>O/S<sup><strong class="far fa-question-circle"></strong></sup></strong>
+
+                                <div class="tooltip-hover" aria-hidden="true">
+                                    <span class="tooltip-content" style="width:200px; right: 50px;">
+                                        Outscores, abbreviated O/S, is the cumulative number of non-matchup opponents outscored thus far in the season.
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                         <div class="col flex-column">
-                            Avg O/S
+                            <div class="tooltip-container">
+                                <strong class="far fa-question-circle"></strong><strong>Avg O/S</strong>
+
+                                <div class="tooltip-hover" aria-hidden="true">
+                                    <span class="tooltip-content" style="width:200px; position: relative; right: 75px;">
+                                        Average number of outscores per week.
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    {% if rankings.in_progress %}
+
+                        <div class="row flex-row d-flex align-items-center text-center text-dark small"
+                             style="background-color: #76889969; border-radius: 10px;">
+                            <div class="col-12">
+                                <strong>In progress results reflect standings, taking into
+                                    account all matchups, finished or otherwise.</strong>
+                            </div>
+                            <div class="col flex-column">
+                                <b class="oi oi-arrow-top up-arrow rank-increase">N</b>
+                                <strong class="rank-increase">Increased N spots</strong>
+                            </div>
+                            <div class="col flex-column">
+                                <b class="oi oi-arrow-bottom down-arrow rank-decrease">N</b>
+                                <strong class="rank-decrease">Decreased N spots</strong>
+                            </div>
+                            <div class="row flex-row d-flex flex-nowrap align-items-center text-center text-dark small"></div>
+                        </div>
+                    {% endif %}
                 </div>
 
                 {% for current_rank, progress_rank in rankings.sorted_season_ranks | zip(rankings.sorted_season_ranks_in_progress) %}
+
+                    {% set current_rank_id_prefix = 'season-rank-current-' %}
+                    {% set progress_rank_id_prefix = 'season-rank-progress-' %}
+                    {% set current_rank_id_prefix =  current_rank_id_prefix ~ current_rank[1].overall_rank ~ '-' %}
+                    {% set progress_rank_id_prefix = progress_rank_id_prefix ~ progress_rank[1].overall_rank ~ '-' %}
 
                     {% set progress_team_id = progress_rank[1].team.team_id %}
                     {% set direction = rankings.in_progress_rank_changes[progress_team_id].direction %}
@@ -62,7 +147,7 @@
                     <div class="card-body">
                         <div class="row flex-row d-flex flex-nowrap align-items-center text-center">
                             <div class="col flex-column">
-                                {{ current_rank[1].overall_rank }}
+                                <output id='{{ current_rank_id_prefix }}overall-rank'>{{ current_rank[1].overall_rank }}</output>
                             </div>
 
                             <div class="col-4 flex-column">
@@ -70,10 +155,10 @@
                                     <div class="text-ellipsis">
                                         <b class="rank-change-arrow {{ arrow_class }}"
                                            style="font-size: small; color: transparent!important;"></b>
-                                        <b class="small">
-                                            {{ rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior or '' }}
+                                        <b class="small" style="color: transparent!important;">
+                                            {{ (rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior) | abs or '' }}
                                         </b>
-                                        {{ current_rank[1].team.name }}
+                                        <output id='{{ current_rank_id_prefix }}team-name'>{{ current_rank[1].team.name }}</output>
                                     </div>
                                 </div>
                                 {% if rankings.in_progress %}
@@ -82,9 +167,9 @@
                                         <div class="text-ellipsis">
                                             <b class="rank-change-arrow {{ arrow_class }}" style="font-size: small"></b>
                                             <b class="small">
-                                                {{ rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior or '' }}
+                                                <output>{{ (rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior) | abs or '' }}</output>
                                             </b>
-                                            {{ progress_rank[1].team.name }}
+                                            <output id='{{ progress_rank_id_prefix }}team-name'>{{ progress_rank[1].team.name }}</output>
                                         </div>
 
                                     </div>
@@ -92,33 +177,33 @@
                             </div>
 
                             <div class="col flex-column">
-                                {{ current_rank[1].ranking_points }}
+                                <output id='{{ current_rank_id_prefix }}ranking-points'>{{ current_rank[1].ranking_points }}</output>
                                 {% if rankings.in_progress %}
                                     <div class="row flex-row d-flex {{ color_class }}">
                                         <div class="col flex-column">
-                                            {{ progress_rank[1].ranking_points }}
+                                            <output id='{{ progress_rank_id_prefix }}ranking-points'>{{ progress_rank[1].ranking_points }}</output>
                                         </div>
                                     </div>
                                 {% endif %}
                             </div>
 
                             <div class="col-2 flex-column">
-                                {{ current_rank[1].wins }}-{{ current_rank[1].losses }}{{ '-' ~ current_rank[1].draws if current_rank[1].draws else '' }}
+                                <output id='{{ current_rank_id_prefix }}record'>{{ current_rank[1].wins }}-{{ current_rank[1].losses }}{{ '-' ~ current_rank[1].draws if current_rank[1].draws else '' }}</output>
                                 {% if rankings.in_progress %}
                                     <div class="row flex-row d-flex {{ color_class }}">
                                         <div class="col flex-column">
-                                            {{ progress_rank[1].wins }}-{{ progress_rank[1].losses }}{{ '-' ~ progress_rank[1].draws if progress_rank[1].draws else '' }}
+                                            <output id='{{ progress_rank_id_prefix }}record'>{{ progress_rank[1].wins }}-{{ progress_rank[1].losses }}{{ '-' ~ progress_rank[1].draws if progress_rank[1].draws else '' }}</output>
                                         </div>
                                     </div>
                                 {% endif %}
                             </div>
 
                             <div class="col flex-column">
-                                {{ current_rank[1].avg_rank }}
+                                <output id='{{ current_rank_id_prefix }}avg-rank'>{{ "%.1f" % (current_rank[1].avg_rank | round(2)) }}</output>
                                 {% if rankings.in_progress %}
                                     <div class="row flex-row d-flex {{ color_class }}">
                                         <div class="col flex-column">
-                                            {{ progress_rank[1].avg_rank }}
+                                            <output id='{{ progress_rank_id_prefix }}avg-rank'>{{ "%.1f" % (progress_rank[1].avg_rank | round(2)) }}</output>
                                         </div>
                                     </div>
                                 {% endif %}
@@ -126,22 +211,22 @@
 
 
                             <div class="col flex-column">
-                                {{ current_rank[1].outscores }}
+                                <output id='{{ current_rank_id_prefix }}outscores'>{{ current_rank[1].outscores }}</output>
                                 {% if rankings.in_progress %}
                                     <div class="row flex-row d-flex {{ color_class }}">
                                         <div class="col flex-column">
-                                            {{ progress_rank[1].outscores }}
+                                            <output id='{{ progress_rank_id_prefix }}outscores'>{{ progress_rank[1].outscores }}</output>
                                         </div>
                                     </div>
                                 {% endif %}
                             </div>
 
                             <div class="col flex-column">
-                                {{ current_rank[1].avg_outscores }}
+                                <output id='{{ current_rank_id_prefix }}avg-outscores'>{{ "%.1f" % (current_rank[1].avg_outscores | round(2)) }}</output>
                                 {% if rankings.in_progress %}
                                     <div class="row flex-row d-flex {{ color_class }}">
                                         <div class="col flex-column">
-                                            {{ progress_rank[1].avg_outscores }}
+                                            <output id='{{ progress_rank_id_prefix }}avg-outscores'>{{ '%.1f'|format(progress_rank[1].avg_outscores|float) }}</output>
                                         </div>
                                     </div>
                                 {% endif %}

@@ -15,7 +15,7 @@ BEARER_AUTH_FMT = 'Bearer {token}'
 YAHOO_API_URL = 'https://fantasysports.yahooapis.com/fantasy/v2/'
 
 
-class FantasyData(object):
+class FantasyData:
     auth = Auth()
 
     def __init__(self, api_query):

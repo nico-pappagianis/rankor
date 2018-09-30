@@ -1,16 +1,17 @@
-import decimal
 from enum import Enum
-from datetime import datetime
+
 from matchup import GameWeek
+from serializable import Serializable
 
 
-class RankChange:
+class RankChange(Serializable):
     class Direction(Enum):
         UP = 'up'
         DOWN = 'down'
         NONE = 'none'
 
     def __init__(self, current, prior):
+        super(RankChange, self).__init__()
         self.current = current
         self.prior = prior
         if current > prior:
@@ -21,10 +22,10 @@ class RankChange:
             self.direction = RankChange.Direction.NONE
 
 
-class LeagueRankings:
+class LeagueRankings(Serializable):
     def __init__(self, league, win_value, draw_value, outscore_value):
-        decimal.getcontext().prec = 3
-        self.in_progress = league.game_weeks[league.current_week].status == GameWeek.Status.MID_EVENT
+        super(LeagueRankings, self).__init__()
+        self.in_progress = league.game_weeks[league.current_week].games_in_progress
         self.win_value = win_value
         self.draw_value = draw_value
         self.outscore_value = outscore_value
@@ -75,10 +76,9 @@ class LeagueRankings:
                 season_ranks[team_id].draws += rank.draw * 1
                 season_ranks[team_id].losses += not rank.win * 1
                 season_ranks[team_id].outscores += rank.outscores
-                season_ranks[team_id].avg_outscores += round(
-                    decimal.Decimal(rank.outscores / len(self.week_ranks.keys())), 1)
+                season_ranks[team_id].avg_outscores += float(round(rank.outscores / len(self.week_ranks.keys()), 1))
                 season_ranks[team_id].ranking_points += rank.ranking_points
-                season_ranks[team_id].avg_rank += round(decimal.Decimal(rank.rank / len(self.week_ranks.keys())), 1)
+                season_ranks[team_id].avg_rank += float(round(rank.rank / len(self.week_ranks.keys()), 1))
 
         sorted_season_ranks = ranks_to_sorted_array(season_ranks)
         for i in range(len(sorted_season_ranks)):
@@ -152,8 +152,9 @@ def ranks_to_sorted_array(ranks):
     return sorted(ranks.items(), key=lambda kv: kv[1].ranking_points, reverse=True)
 
 
-class SeasonRank:
+class SeasonRank(Serializable):
     def __init__(self, team):
+        super(SeasonRank, self).__init__()
         self.team = team
         self.overall_rank = None
         self.avg_rank = 0
@@ -165,8 +166,9 @@ class SeasonRank:
         self.ranking_points = 0
 
 
-class WeekRank:
+class WeekRank(Serializable):
     def __init__(self, week, status, team, opponent, team_points, opponent_points):
+        super(WeekRank, self).__init__()
         self.status = status
         self.outscores = None
         self.rank = None

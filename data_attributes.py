@@ -1,8 +1,14 @@
+import pytz
+
+
 def join(*args):
     return '.'.join(args)
 
 
 FANTASY_CONTENT = 'fantasy_content'
+DATE_FMT = '%Y-%m-%d'
+PST = pytz.timezone('US/Pacific')
+
 
 class GameAttrs:
     GAME_KEY = join(FANTASY_CONTENT, 'games.game.game_key.cdata')

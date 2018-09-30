@@ -1,3 +1,44 @@
+.tooltip-content {
+    color: slategray;
+    font-weight: bold;
+    background-color: white;
+    border-radius: 10px;;
+    display: inline-block;
+    border: 1px dotted slategray;
+    z-index: 2;
+}
+
+.flex-column {
+    width: 100%;
+}
+
+.tooltip-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.tooltip-hover {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: rgba(255, 255, 255, .8);
+    color: darkslategray;
+    opacity: 0;
+    transition: opacity 0s;
+    -webkit-transition: opacity 0s;
+}
+
+.tooltip-container:hover .tooltip-hover,
+.tooltip-container.hasHover .tooltip-hover, .tooltip-content:hover {
+    opacity: 1;
+    transition: opacity 0s;
+    -webkit-transition: opacity 0s;
+}
 
 .text-ellipsis {
     white-space: nowrap;
@@ -22,7 +63,7 @@
 }
 
 .card-body {
-    background-color: lightgray;
+    background-color: #76889969;
     font-weight: bold;
 }
 
@@ -32,12 +73,16 @@ sub {
 }
 
 sup {
-    font-size: x-small !important;
-    vertical-align: sub !important
+    font-size: medium !important;
+    vertical-align: super !important
 }
 
 .icon:before {
     font-family: "Font Awesome 5 Free" !important;
+}
+
+hr {
+    border: 1px solid lightslategray!important;
 }
 
 /*html body {*/
@@ -61,15 +106,15 @@ sup {
 /*}*/
 
 .rank-increase {
-color: green;
+    color: green;
 }
 
 .rank-decrease {
-color: darkred;
+    color: darkred;
 }
 
 .rank-no-change {
-color: #343a40;
+    color: #343a40;
 }
 
 .rank-change-arrow {
