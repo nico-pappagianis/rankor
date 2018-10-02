@@ -1,11 +1,10 @@
 <div class="container-fluid pl-0">
     {% for week, week_ranks in rankings.week_ranks.items() %}
-        {% set games_in_progress = league.current_week == week and league.game_weeks[week].games_in_progress %}
-        {% set week_in_progress = league.current_week == week and league.game_weeks[week].week_in_progress %}
+        {% set week_in_progress = league.game_weeks[week].week_in_progress %}
         {% set week_color = "#fff3bb" if week_in_progress else "ghostwhite" %}
         {% set week_collapse_id = 'week-{week}-ranks-collapse'.format(week=week) %}
 
-        <div class="flex-row justify-content-lg-center d-lg-flex">
+        <div class="flex-row justify-content-lg-center d-lg-flex week-section" id="week-{{ week }}">
 
             <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;">
                 <div class="card-title font-weight-bold btn header-style text-center text-lg-center"
@@ -16,9 +15,9 @@
                           <strong class="fa-stack-1x">{{ week }}</strong>
                         </span>
                 </div>
-                <div class="collapse {{ 'show' if games_in_progress else '' }}" id={{ week_collapse_id }}>
-                    <div class="card-header border-0 header-style">
-                        <div class="row flex-row d-flex flex-nowrap align-items-center text-center m-auto">
+                <div class="collapse {{ 'show' if week_in_progress else '' }}" id={{ week_collapse_id }}>
+                    <div class="card-header border-0 header-style align-items-center text-center m-auto">
+                        <div class="row flex-row d-flex flex-nowrap align-items-center">
                             <div class="col flex-column">
                                 Rank
                             </div>
@@ -26,19 +25,47 @@
                                 Team
                             </div>
                             <div class="col flex-column">
-                                Pts
+                                <div class="row flex-row flex-nowrap">
+                                    <div class="col flex-column" style="margin-right: -30px;">
+                                        Pts
+                                    </div>
+                                    <div class="col flex-column small {{ 'far fa-clock' if week_in_progress else '' }}"
+                                         style="color: #fff3bb; vertical-align: super">
+                                    </div>
+                                </div>
                             </div>
                             <div class="col flex-column">
-                                Opp Pts
+                                <div class="row flex-row flex-nowrap">
+                                    <div class="col flex-column" style="margin-right: -30px;">
+                                        OPts
+                                    </div>
+                                    <div class="col flex-column small {{ 'far fa-clock' if week_in_progress else '' }}"
+                                         style="color: #fff3bb; vertical-align: super">
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-2 flex-column">
                                 Opp
                             </div>
                             <div class="col flex-column">
-                                Result
+                                <div class="row flex-row flex-nowrap">
+                                    <div class="col flex-column" style="margin-right: -30px;">
+                                        W/L
+                                    </div>
+                                    <div class="col flex-column small {{ 'far fa-clock' if week_in_progress else '' }}"
+                                         style="color: #fff3bb; vertical-align: super">
+                                    </div>
+                                </div>
                             </div>
                             <div class="col flex-column">
-                                $$
+                                <div class="row flex-row flex-nowrap">
+                                    <div class="col flex-column" style="margin-right: -30px;">
+                                        $$
+                                    </div>
+                                    <div class="col flex-column small {{ 'far fa-clock' if week_in_progress else '' }}"
+                                         style="color: #fff3bb; vertical-align: super">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -65,18 +92,10 @@
                                     <output id="{{ rank_id_prefix }}-opponent-name">{{ rank.opponent.name }}</output>
                                 </div>
                                 <div class="col flex-column">
-                                    {% if games_in_progress %}
-                                        <b class="fa fa-minus"></b>
-                                    {% else %}
-                                        <output id="{{ rank_id_prefix }}-result">{{ rank.result }}</output>
-                                    {% endif %}
+                                    <output id="{{ rank_id_prefix }}-result">{{ rank.result }}</output>
                                 </div>
                                 <div class="col flex-column">
-                                    {% if games_in_progress %}
-                                        <b class="fa fa-minus"></b>
-                                    {% else %}
-                                        <output id="{{ rank_id_prefix }}-ranking-points">{{ rank.ranking_points }}</output>
-                                    {% endif %}
+                                    <output id="{{ rank_id_prefix }}-ranking-points">{{ rank.ranking_points }}</output>
                                 </div>
                             </div>
                         </div>

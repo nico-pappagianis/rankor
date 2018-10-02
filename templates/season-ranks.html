@@ -11,7 +11,7 @@
                 {% if rankings.in_progress %}
                     <div class="row flex-row d-flex flex-nowrap align-items-center justify-content-center">
                         <div class="col flex-column">
-                            <i style="color: gold">Week in progress! Live ranks shown on second line.</i>
+                            <i style="color: gold">Games in progress! Live ranks shown on second line.</i>
                         </div>
                     </div>
                 {% endif %}
@@ -78,7 +78,7 @@
                         </div>
                         <div class="col flex-column">
                             <div class="tooltip-container">
-                                <strong>O/S<sup><strong class="far fa-question-circle"></strong></sup></strong>
+                                <strong class="far fa-question-circle"></strong><strong>O/S</strong>
 
                                 <div class="tooltip-hover" aria-hidden="true">
                                     <span class="tooltip-content" style="width:200px; right: 50px;">
@@ -111,6 +111,10 @@
                             <div class="col flex-column">
                                 <b class="oi oi-arrow-top up-arrow rank-increase">N</b>
                                 <strong class="rank-increase">Increased N spots</strong>
+                            </div>
+                            <div class="col flex-column">
+                                <b class="fas fa-equals text-dark"></b>
+                                <strong class="text-dark">No change</strong>
                             </div>
                             <div class="col flex-column">
                                 <b class="oi oi-arrow-bottom down-arrow rank-decrease">N</b>

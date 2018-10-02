@@ -1,16 +1,26 @@
+import json
 import os
-
-from flask import Flask, render_template, request, jsonify, Response
-from flask_bootstrap import Bootstrap
+import logging
 import jsonpickle
+from flask import Flask, render_template, request, jsonify
+from flask_bootstrap import Bootstrap
+
 import forms
 from league import League
 from rankings import LeagueRankings, RankChange
-from jsonconversion.decoder import JSONObjectDecoder
-from jsonconversion.encoder import JSONObjectEncoder
-import json
 
-app = Flask(__name__)
+
+import flask
+from flask_log import Logging
+formatter = (
+            '[%(asctime)s] %(levelname)s [%(name)s] '
+            '%(filename)s:%(lineno)d - %(message)s')
+app = flask.Flask(__name__)
+app.config['FLASK_LOG_LEVEL'] = 'DEBUG'
+flask_log = Logging(app)
+
+Logging.set_formatter(formatter)
+
 app.jinja_env.filters['zip'] = zip
 
 app.config.update(dict(

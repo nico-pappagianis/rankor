@@ -1,7 +1,10 @@
 function update() {
-    if (!games_in_progress) {
+    last_updated = moment().tz(PST).format(TIME_FORMAT);
+
+    if (!week_in_progress) {
         return false;
     }
+
     $.getJSON($SCRIPT_ROOT + '/update_in_progress_games', {
         league_data_path: league_data_path
     }, function (data) {
@@ -30,10 +33,12 @@ function update() {
         });
         return true;
     });
-    return false;
+
+    $("#updated").text(last_updated);
+    return true;
 }
 
 $(document).ready(() => {
-    setInterval(update, 3000)
+    setInterval(update, 30000)
 });
 

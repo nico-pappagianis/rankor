@@ -6,7 +6,8 @@ def join(*args):
 
 
 FANTASY_CONTENT = 'fantasy_content'
-DATE_FMT = '%Y-%m-%d'
+YAHOO_DATE_FMT = '%Y-%m-%d'
+DATETIME_FMT = '%Y-%m-%d %H:%M:%S %Z%z'
 PST = pytz.timezone('US/Pacific')
 
 

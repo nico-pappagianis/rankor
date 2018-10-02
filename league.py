@@ -56,19 +56,20 @@ class League(Serializable):
 
         league = load(self.data_path)
         if league:
+            logger.info('Loaded league data from path: {path}'.format(path=self.data_path))
             self.__dict__ = league.__dict__
         else:
             self.__init_from_data()
 
         self.__load_weeks()
-        self.current_week_start_time = self.game_weeks[self.current_week].week.week_start_time
-        self.current_week_end_time = self.game_weeks[self.current_week].week.week_end_time
-        self.__update()
+        self.current_week_start_time = self.game_weeks[self.current_week].week.start_day.start_time
+        self.current_week_end_time = self.game_weeks[self.current_week].week.end_day.end_time
+        self.__update_current_week()
 
         self.__save()
 
-    def update_current_week(self):
-        if self.game_weeks[self.current_week].games_in_progress:
+    def refresh_current_week(self):
+        if self.game_weeks[self.current_week].week_in_progress:
             self.game_weeks[self.current_week] = MatchupsData(self, self.current_week).game_week
 
     def __save(self):
@@ -76,31 +77,37 @@ class League(Serializable):
         for week, game_week in self.game_weeks.items():
             data_dir = WEEK_DATA_DIR.format(league_data_dir=self.data_dir, week=week)
             save(game_week, data_dir, GAME_WEEK_DATA_FILE)
+            logger.info('Saved week {week} data to path: {path} filename: {filename}'
+                        .format(week=week, path=data_dir, filename=GAME_WEEK_DATA_FILE))
 
     def __load_weeks(self):
         for week in range(self.start_week, self.end_week + 1):
             if not self.__load_week(week):
+                logger.info('Downloading data for GameWeek {week}'.format(week=week))
                 game_week = MatchupsData(self, week).game_week
                 if game_week:
                     self.game_weeks[week] = game_week
-                else:
-                    return
 
     def __load_week(self, week):
         game_week = load(GAME_WEEK_DATA_PATH.format(league_data_dir=self.data_dir, week=week))
         if game_week:
             self.game_weeks[week] = game_week
+            logger.info('Loaded data for GameWeek {week}'.format(week=week))
             return True
         return False
 
-    def __update(self):
+    def __update_current_week(self):
         if self.current_week_end_time <= PST.localize(datetime.now()):
+            logger.info('Updating current week. End of week {week}'.format(week=self.current_week))
             league_data = LeagueData(self.game_code, self.season, self.league_id)
             self.current_week = int(league_data.get_attribute(LeagueAttrs.CURRENT_WEEK))
-        self.update_current_week()
+            logger.info('Current week is now {week}'.format(week=self.current_week))
+        self.refresh_current_week()
 
     def __init_from_data(self):
+        logger.info('Downloading league data...')
         league_data = LeagueData(self.game_code, self.season, self.league_id)
+        logger.info('Done downloading league data.')
 
         self.game_code = league_data.game_code
         self.season = league_data.season
@@ -127,9 +134,17 @@ class League(Serializable):
     @staticmethod
     def get_in_progress_data(league_data_path):
         league = load(league_data_path)
-        if not league.game_weeks[league.current_week].games_in_progress:
+        if not league:
+            logger.warning('No league data in path: {path}'.format(path=league_data_path))
             return None
+        else:
+            logger.info('Loaded league data from path: {path}'.format(path=league_data_path))
+        if not league.game_weeks[league.current_week].week_in_progress:
+            logger.info('Current week is not in progress.')
+            return None
+
         league.game_weeks[league.current_week] = MatchupsData(league, league.current_week).game_week
+        league.__save()
         rankings = LeagueRankings(league, 10, 5, 1)
         return rankings
 

@@ -6,3 +6,4 @@ untangle
 pytz
 jsonpickle
 jsonconversion
+flask-log

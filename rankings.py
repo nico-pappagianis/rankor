@@ -1,6 +1,7 @@
+from datetime import datetime
 from enum import Enum
 
-from matchup import GameWeek
+from data_attributes import PST
 from serializable import Serializable
 
 
@@ -25,7 +26,7 @@ class RankChange(Serializable):
 class LeagueRankings(Serializable):
     def __init__(self, league, win_value, draw_value, outscore_value):
         super(LeagueRankings, self).__init__()
-        self.in_progress = league.game_weeks[league.current_week].games_in_progress
+        self.in_progress = league.game_weeks[league.current_week].week_in_progress
         self.win_value = win_value
         self.draw_value = draw_value
         self.outscore_value = outscore_value
@@ -62,36 +63,38 @@ class LeagueRankings(Serializable):
             if last_week and last_week < week:
                 break
 
-            for rank in week_ranks:
-
-                if rank.status == GameWeek.Status.PRE_EVENT:
+            for week_rank in week_ranks:
+                now = PST.localize(datetime.now())
+                if now < week_rank.game_week.week.start_day.start_time:
                     continue
 
-                if rank.status == GameWeek.Status.MID_EVENT:
+                if week_rank.game_week.week_in_progress:
                     if not include_in_progress:
                         continue
 
-                team_id = rank.team.team_id
-                season_ranks[team_id].wins += rank.win * 1
-                season_ranks[team_id].draws += rank.draw * 1
-                season_ranks[team_id].losses += not rank.win * 1
-                season_ranks[team_id].outscores += rank.outscores
-                season_ranks[team_id].avg_outscores += float(round(rank.outscores / len(self.week_ranks.keys()), 1))
-                season_ranks[team_id].ranking_points += rank.ranking_points
-                season_ranks[team_id].avg_rank += float(round(rank.rank / len(self.week_ranks.keys()), 1))
+                team_id = week_rank.team.team_id
+                season_ranks[team_id].wins += week_rank.win * 1
+                season_ranks[team_id].draws += week_rank.draw * 1
+                season_ranks[team_id].losses += not week_rank.win * 1
+                season_ranks[team_id].outscores += week_rank.outscores
+                season_ranks[team_id].avg_outscores += float(
+                    round(week_rank.outscores / len(self.week_ranks.keys()), 1))
+                season_ranks[team_id].ranking_points += week_rank.ranking_points
+                season_ranks[team_id].avg_rank += float(round(week_rank.rank / len(self.week_ranks.keys()), 1))
 
         sorted_season_ranks = ranks_to_sorted_array(season_ranks)
         for i in range(len(sorted_season_ranks)):
-            rank = sorted_season_ranks[i]
-            season_ranks[rank[0]].overall_rank = i + 1
+            week_rank = sorted_season_ranks[i]
+            season_ranks[week_rank[0]].overall_rank = i + 1
 
         return season_ranks
 
     def set_week_ranks(self):
         self.week_ranks = {}
+        now = PST.localize(datetime.now())
         for week, game_week in self.league.game_weeks.items():
 
-            if game_week.status == GameWeek.Status.PRE_EVENT:
+            if now < game_week.week.start_day.start_time:
                 continue
 
             for matchup in game_week.matchups:
@@ -115,9 +118,9 @@ class LeagueRankings(Serializable):
                     team2.draws += 1
 
                 self.week_ranks[week].append(
-                    WeekRank(week, game_week.status, team1, team2, matchup.team1_points, matchup.team2_points))
+                    WeekRank(game_week, team1, team2, matchup.team1_points, matchup.team2_points))
                 self.week_ranks[week].append(
-                    WeekRank(week, game_week.status, team2, team1, matchup.team2_points, matchup.team1_points))
+                    WeekRank(game_week, team2, team1, matchup.team2_points, matchup.team1_points))
 
             if week in self.week_ranks:
                 self.rank_teams(week)
@@ -167,13 +170,13 @@ class SeasonRank(Serializable):
 
 
 class WeekRank(Serializable):
-    def __init__(self, week, status, team, opponent, team_points, opponent_points):
+    def __init__(self, game_week, team, opponent, team_points, opponent_points):
         super(WeekRank, self).__init__()
-        self.status = status
         self.outscores = None
         self.rank = None
         self.ranking_points = None
-        self.week = week
+        self.game_week = game_week
+        self.week = game_week.week.number
         self.team = team
         self.opponent = opponent
         self.win = team_points > opponent_points

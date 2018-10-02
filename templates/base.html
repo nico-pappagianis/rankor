@@ -28,6 +28,8 @@
 
     <script type='text/javascript' src='/static/js/touchpunch.js'></script>
     <script type='text/javascript' src='/static/js/update.js'></script>
+    <script type='text/javascript' src='/static/js/moment.js'></script>
+    <script type='text/javascript' src='/static/js/moment-timezone-with-data.js'></script>
 
 
     <script type="text/javascript">
@@ -56,6 +58,10 @@
             return true;
         });
 
+        $("[id^='dropdown-week']").click(function() {
+            let target = $(this).attr('href') + '-ranks-collapse';
+            $(target).show();
+        });
     </script>
 
 {% endblock %}

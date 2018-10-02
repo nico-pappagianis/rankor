@@ -7,44 +7,79 @@
         $(function () {
             $("#accordion").accordion();
         });
+
+        var league_data_path = '{{ league.data_path }}';
+        var week_in_progress = {{ rankings.in_progress|tojson|safe }};
+        const TIME_FORMAT = 'M-D-YYYY hh:mm:ss z';
+        const PST = 'America/Los_Angeles';
+        var last_updated = moment().tz(PST).format(TIME_FORMAT);
+        $("#updated").text(last_updated);
     </script>
 
 {% endblock %}
 
 {% block content %}
-    <div class="container-fluid d-flex" style="min-width: 725px; max-width: 725px;">
-        <script type="text/javascript">
-            var league_data_path = '{{ league.data_path }}';
-            var games_in_progress = {{ rankings.in_progress|tojson|safe }};
-        </script>
+    <nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color: white;">
 
-        <div class="justify-content-center text-center w-100 btn"
-             data-toggle="collapse" data-target="#ranking-system-collapse"
-             aria-expanded="true" aria-controls="ranking-system-collapse">
-            <div class="row flex-row  border-0 pl-4 pr-4 w-100 h2">
-                <div class="col flex-column">
-                    <hr>
-                    <strong style="color: slategray">{{ league.season }}</strong>
+        <a class="navbar-brand float-left font-weight-bold pr-5" href="{{ league.url }}" target="_blank" style="color:slategray;">
+            {{ league.name }} | {{ league.season }}</a>
+
+
+        <div class="navbar-brand pr-5">
+            <div class="tooltip-container">
+                <span class="fa-stack" style="color: slategray;">
+                          <i class="fas fa-sync-alt fa-stack-2x"></i>
+                          <strong class="fa-stack-1x"><strong class="fas fa-question" style="font-size:0.7em;"></strong></strong>
+                        </span>
+                <div class="tooltip-hover">
+
+                    <span class="tooltip-content" style="color: slategray;">
+                        Last updated at
+                        <output id="updated"></output>
+                    </span>
                 </div>
             </div>
-            <div class="row flex-row border-0 pl-4 pr-4 w-100 h2">
-                <div class="col flex-column">
-                    <i style="color: slategray;"><strong>{{ league.name }}</strong></i>
-                    <hr>
+        </div>
+
+        <a class="navbar-brand float-right pr-5" style="color: slategray; border-radius: 5px;"
+           href="#ranking-system"><i class="fas fa-hand-holding-usd fa-2x" style="color:slategray;"></i></a>
+
+        <button class="navbar-toggler border-0" style="color: slategray;" type="button" data-toggle="collapse"
+                data-target="#navbar-weeks"
+                aria-controls="navbar-weeks" aria-expanded="false" aria-label="Toggle navigation">
+            <i class="fas fa-calendar-alt fa-2x"></i>
+        </button>
+
+
+        <div class="collapse navbar-collapse" id="navbar-weeks">
+            <div class="navbar-nav mr-auto">
+                <div class="row">
+                    {% for week, game_week in league.game_weeks.items() %}
+                        {% if week <= league.current_week %}
+                            <div class="col-3 col-lg nav-item">
+                                <a class="nav-link" id="dropdown-week-{{ week }}"
+                                   href="#week-{{ week }}">Week {{ week }}</a>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
 
         </div>
-    </div>
+    </nav>
 
-    <div class="container-fluid pl-0">
+    <div style="padding-top: 70px;"></div>
+    {% include 'week-ranks.html' %}
+    {% include 'season-ranks.html' %}
+
+    <div class="container-fluid pl-0" id="ranking-system">
         <div class="flex-row justify-content-lg-center d-lg-flex">
 
             <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;">
                 <div class="collapse show" id="ranking-system-collapse">
                     <div class="card-title font-weight-bold header-style text-center text-lg-center">
                         <div class="row flex-row">
-                            <div class="col-12 flex-column">
+                            <div class="col-12 flex-column pt-2">
                                 <i class="fas fa-hand-holding-usd fa-5x" style="color: gold"></i>
                             </div>
                             <div class="col flex-column">
@@ -72,9 +107,9 @@
                                     <strong style="color:gold">Draw<sup><strong class="far fa-question-circle"></strong></sup></strong>
 
                                     <div class="tooltip-hover" aria-hidden="true">
-                            <span class="tooltip-content">
-                                This amount is awarded should you and your head-to-head matchup opponent draw.
-                            </span>
+                                        <span class="tooltip-content">
+                                            This amount is awarded should you and your head-to-head matchup opponent draw.
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -112,7 +147,5 @@
             </div>
         </div>
     </div>
-    {% include 'week-ranks.html' %}
-    {% include 'season-ranks.html' %}
 
 {% endblock %}
