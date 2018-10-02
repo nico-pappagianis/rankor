@@ -59,9 +59,35 @@
         });
 
         $("[id^='dropdown-week']").click(function() {
-            let target = $(this).attr('href') + '-ranks-collapse';
-            $(target).show();
+            let target = $($(this).attr('href') + '-ranks-collapse');
+            if (target.is(':visible')) {
+                target.hide();
+            }
+            else {
+                target.show();
+            }
         });
+
+         $("[id^='historical-ranks-navlink']").click(function() {
+             let hist_standings = $("#historical-ranks-collapse");
+             if (hist_standings.is(":visible")) {
+                 hist_standings.hide();
+             }
+             else {
+                 hist_standings.show();
+             }
+        });
+
+         $("[id^='collapse-all']").click(function() {
+             let collapsables = $("[id*='-collapse']");
+             collapsables.each(function( index ) {
+                 let collaspable = $(collapsables[index]);
+                if (collaspable.is(":visible")) {
+                    collaspable.hide();
+                }
+            });
+        });
+
     </script>
 
 {% endblock %}

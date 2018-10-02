@@ -2,7 +2,7 @@
     text-align: left;
 }
 
-.week-section {
+.section-anchor {
     padding-top: 200px;
     margin-top: -200px;
 }
@@ -72,7 +72,7 @@
 }
 
 .card-body {
-    background-color: #76889969;
+    background-color: lightgray;
     font-weight: bold;
 }
 

@@ -147,8 +147,9 @@
                     {% endif %}
 
                     {% set arrow_class = arrow_class + ' ' + color_class %}
-
-                    <div class="card-body">
+                    {% set opacity_scale = 1 %}
+                    <div class="card-body"
+                         style="{{ 'background-color: rgba(' ~ (255 - 10 * (current_rank[1].overall_rank - 1)*(current_rank[1].overall_rank - 1)) ~ ', '  ~ (215 - 20* (current_rank[1].overall_rank - 1)*(current_rank[1].overall_rank - 1)) ~ ', ' ~ (0 - 0 * (current_rank[1].overall_rank-1)) ~ ', ' ~ (1/current_rank[1].overall_rank) if current_rank[1].overall_rank <= 4 else 0 }});">
                         <div class="row flex-row d-flex flex-nowrap align-items-center text-center">
                             <div class="col flex-column">
                                 <output id='{{ current_rank_id_prefix }}overall-rank'>{{ current_rank[1].overall_rank }}</output>
@@ -240,5 +241,104 @@
                 {% endfor %}
             </div>
         </div>
+    </div>
+</div>
+
+<div class="container-fluid pl-0">
+
+    <div class="flex-row justify-content-lg-center d-lg-flex section-anchor" id="historical-ranks">
+
+        <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;">
+
+            <div class="card-title font-weight-bold btn header-style"
+                 data-toggle="collapse" data-target="#historical-ranks-collapse"
+                 aria-expanded="true" aria-controls="historical-ranks-collapse">
+                <i class="fas fa-book fa-5x" style="color:gold;"></i>
+            </div>
+
+        </div>
+    </div>
+    <div class="collapse" id="historical-ranks-collapse">
+
+        {% for hist_rank, week in rankings.sorted_historical_ranks %}
+            <div class="flex-row justify-content-lg-center d-lg-flex">
+
+                <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;">
+
+                    <div class="card-title font-weight-bold btn header-style"
+                         data-toggle="collapse" data-target="#historical-standings-week-{{ week }}-collapse"
+                         aria-expanded="true" aria-controls="historical-standings-week-{{ week }}-collapse">
+
+                        <span class="fa-stack fa-2x" style="color: gold;">
+                          <strong class="fas fa-calendar fa-stack-2x"></strong>
+                          <strong class="fa-stack pt-2" style="color:slategray; font-size: .7em;">{{ week }}</strong>
+                        </span>
+                    </div>
+
+                    <div class="collapse" id="historical-standings-week-{{ week }}-collapse">
+                        <div class="card-header border-0 header-style">
+                            <div class="row flex-row d-flex flex-nowrap align-items-center text-center">
+                                <div class="col flex-column">
+                                    <strong>Rank</strong>
+                                </div>
+                                <div class="col-4 flex-column">
+                                    <strong>Team</strong>
+                                </div>
+                                <div class="col flex-column">
+                                    <strong>$$</strong>
+                                </div>
+                                <div class="col-2 flex-column">
+                                    <strong>W-L</strong>
+                                </div>
+                                <div class="col flex-column">
+                                    <strong>Avg Rank</strong>
+                                </div>
+                                <div class="col flex-column">
+                                    <strong>O/S</strong>
+                                </div>
+                                <div class="col flex-column">
+                                    <strong>Avg O/S</strong>
+                                </div>
+                            </div>
+                        </div>
+                        {% for current_rank in hist_rank %}
+                            {% set opacity_scale = 1 %}
+                            <div class="card-body"
+                                 style="{{ 'background-color: rgba(' ~ (255 - 10 * (current_rank[1].overall_rank - 1)*(current_rank[1].overall_rank - 1)) ~ ', '  ~ (215 - 20* (current_rank[1].overall_rank - 1)*(current_rank[1].overall_rank - 1)) ~ ', ' ~ (0 - 0 * (current_rank[1].overall_rank-1)) ~ ', ' ~ (1/current_rank[1].overall_rank) if current_rank[1].overall_rank <= 4 else 0 }});">
+                                <div class="row flex-row d-flex flex-nowrap align-items-center text-center">
+                                    <div class="col flex-column">
+                                        <output id='{{ current_rank_id_prefix }}overall-rank'>{{ current_rank[1].overall_rank }}</output>
+                                    </div>
+
+                                    <div class="col-4 flex-column text-ellipsis">
+                                        <output id='{{ current_rank_id_prefix }}team-name'>{{ current_rank[1].team.name }}</output>
+                                    </div>
+
+                                    <div class="col flex-column">
+                                        <output id='{{ current_rank_id_prefix }}ranking-points'>{{ current_rank[1].ranking_points }}</output>
+                                    </div>
+
+                                    <div class="col-2 flex-column">
+                                        <output id='{{ current_rank_id_prefix }}record'>{{ current_rank[1].wins }}-{{ current_rank[1].losses }}{{ '-' ~ current_rank[1].draws if current_rank[1].draws else '' }}</output>
+                                    </div>
+
+                                    <div class="col flex-column">
+                                        <output id='{{ current_rank_id_prefix }}avg-rank'>{{ "%.1f" % (current_rank[1].avg_rank | round(2)) }}</output>
+                                    </div>
+
+                                    <div class="col flex-column">
+                                        <output id='{{ current_rank_id_prefix }}outscores'>{{ current_rank[1].outscores }}</output>
+                                    </div>
+
+                                    <div class="col flex-column">
+                                        <output id='{{ current_rank_id_prefix }}avg-outscores'>{{ "%.1f" % (current_rank[1].avg_outscores | round(2)) }}</output>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 </div>

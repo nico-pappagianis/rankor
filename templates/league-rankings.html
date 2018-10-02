@@ -21,11 +21,12 @@
 {% block content %}
     <nav class="navbar fixed-top navbar-expand-lg navbar-light" style="background-color: white;">
 
-        <a class="navbar-brand float-left font-weight-bold pr-5" href="{{ league.url }}" target="_blank" style="color:slategray;">
+        <a class="navbar-brand font-weight-bold pr-lg-5" href="{{ league.url }}" target="_blank"
+           style="color:slategray;">
             {{ league.name }} | {{ league.season }}</a>
 
 
-        <div class="navbar-brand pr-5">
+        <div class="navbar-brand pr-lg-5">
             <div class="tooltip-container">
                 <span class="fa-stack" style="color: slategray;">
                           <i class="fas fa-sync-alt fa-stack-2x"></i>
@@ -41,31 +42,45 @@
             </div>
         </div>
 
-        <a class="navbar-brand float-right pr-5" style="color: slategray; border-radius: 5px;"
+        <a class="navbar-brand pr-lg-5" style="color: slategray; border-radius: 5px;"
            href="#ranking-system"><i class="fas fa-hand-holding-usd fa-2x" style="color:slategray;"></i></a>
 
+
+        <a class="navbar-brand pr-lg-5" style="color: slategray; border-radius: 5px;"
+           href="#historical-ranks" id="historical-ranks-navlink"><i class="fas fa-book fa-2x"
+                                                                     style="color:slategray;"></i></a>
+
+            <a class="navbar-brand" style="color: slategray; border-radius: 5px;" id="collapse-all" href="#">
+            <i class="fas fa-minus-square fa-2x" style="color:slategray;"></i>
+        </a>
         <button class="navbar-toggler border-0" style="color: slategray;" type="button" data-toggle="collapse"
                 data-target="#navbar-weeks"
                 aria-controls="navbar-weeks" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fas fa-calendar-alt fa-2x"></i>
         </button>
 
-
         <div class="collapse navbar-collapse" id="navbar-weeks">
-            <div class="navbar-nav mr-auto">
+            <div class="navbar-nav ml-auto">
                 <div class="row">
-                    {% for week, game_week in league.game_weeks.items() %}
+                    {% for week in rankings.week_ranks %}
                         {% if week <= league.current_week %}
-                            <div class="col-3 col-lg nav-item">
-                                <a class="nav-link" id="dropdown-week-{{ week }}"
-                                   href="#week-{{ week }}">Week {{ week }}</a>
+                            <div class="col-2 col-lg nav-item">
+                                <a class="nav-link small" id="dropdown-week-{{ week }}"
+                                   href="#week-{{ week }}">
+
+                                <span class="fa-stack fa-2x text-center" style="color: slategray;">
+                                  <strong class="fas fa-calendar fa-stack-2x"></strong>
+                                  <strong class="fa-stack-1x text-light pt-2" style="vertical-align: center;">{{ week }}</strong>
+                                </span>
+
+                                </a>
                             </div>
                         {% endif %}
                     {% endfor %}
                 </div>
             </div>
-
         </div>
+
     </nav>
 
     <div style="padding-top: 70px;"></div>

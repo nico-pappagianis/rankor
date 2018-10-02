@@ -127,8 +127,8 @@ class League(Serializable):
 
         for week in reversed(range(self.start_week, self.end_week + 1)):
             if not self.num_regular_season_games:
-                if not MatchupsData(self, week).game_week:
-                    self.num_regular_season_games = week - 1
+                if MatchupsData(self, week).game_week:
+                    self.num_regular_season_games = week + 1
                     break
 
     @staticmethod

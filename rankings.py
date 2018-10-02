@@ -34,6 +34,7 @@ class LeagueRankings(Serializable):
         self.week_ranks = {}
 
         self.set_week_ranks()
+        self.sorted_historical_ranks = [(ranks_to_sorted_array(self.get_season_ranks(last_week=week)), week) for week in reversed(range(1, league.current_week-1))]
         self.season_ranks = self.get_season_ranks()
         self.season_ranks_prior = self.get_season_ranks(last_week=league.current_week - 1)
         self.season_ranks_in_progress = self.get_season_ranks(True)
