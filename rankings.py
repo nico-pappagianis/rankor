@@ -34,7 +34,7 @@ class LeagueRankings(Serializable):
         self.week_ranks = {}
 
         self.set_week_ranks()
-        self.sorted_historical_ranks = [(ranks_to_sorted_array(self.get_season_ranks(last_week=week)), week) for week in reversed(range(1, league.current_week-1))]
+        self.sorted_historical_ranks = [(ranks_to_sorted_array(self.get_season_ranks(last_week=week)), week) for week in range(1, league.current_week)]
         self.season_ranks = self.get_season_ranks()
         self.season_ranks_prior = self.get_season_ranks(last_week=league.current_week - 1)
         self.season_ranks_in_progress = self.get_season_ranks(True)
@@ -79,9 +79,9 @@ class LeagueRankings(Serializable):
                 season_ranks[team_id].losses += not week_rank.win * 1
                 season_ranks[team_id].outscores += week_rank.outscores
                 season_ranks[team_id].avg_outscores += float(
-                    round(week_rank.outscores / len(self.week_ranks.keys()), 1))
+                    round(week_rank.outscores / len(self.week_ranks.keys()), 2))
                 season_ranks[team_id].ranking_points += week_rank.ranking_points
-                season_ranks[team_id].avg_rank += float(round(week_rank.rank / len(self.week_ranks.keys()), 1))
+                season_ranks[team_id].avg_rank += float(round(week_rank.rank / len(self.week_ranks.keys()), 2))
 
         sorted_season_ranks = ranks_to_sorted_array(season_ranks)
         for i in range(len(sorted_season_ranks)):
@@ -184,11 +184,11 @@ class WeekRank(Serializable):
         self.draw = team_points == opponent_points
         self.result = None
         if self.win:
-            self.result = 'Win'
+            self.result = 'W'
         elif self.draw:
-            self.result = 'Draw'
+            self.result = 'D'
         else:
-            self.result = 'Loss'
+            self.result = 'L'
 
         self.team_points = team_points
         self.opponent_points = opponent_points

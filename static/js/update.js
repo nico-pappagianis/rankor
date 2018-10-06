@@ -31,10 +31,10 @@ function update() {
             $(id_prefix + 'outscores').text(rank.outscores);
             $(id_prefix + 'avg-outscores').text(Number((rank.avg_outscores).toFixed(1)));
         });
+        $("#updated").text(last_updated);
         return true;
     });
 
-    $("#updated").text(last_updated);
     return true;
 }
 

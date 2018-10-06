@@ -1,0 +1,124 @@
+<nav class="navbar fixed-top navbar-expand-lg dark-bg">
+
+    <a class="navbar-brand font-weight-bold pr-lg-5 mr-auto font-0-8x" href="{{ league.url }}" target="_blank"
+       style="color:slategray;">
+        {{ league.name }} - {{ league.season }}</a>
+
+
+    <div class="navbar-brand pr-lg-5 mr-auto">
+        <div class="tooltip-container">
+                <span class="fa-stack" style="color: slategray;">
+                    <span class="fas fa-sync-alt fa-stack-2x"></span>
+                    <span class="fa-stack-1x">
+                        <span class="fa-stack font-0-65x">?</span>
+                    </span>
+                </span>
+            <div class="tooltip-hover">
+
+                    <span class="tooltip-content font-0-75x" style="color: slategray;">
+                        Last updated at
+                        <output id="updated"></output>
+                    </span>
+            </div>
+        </div>
+    </div>
+
+    <a class="navbar-brand pr-lg-5 mr-auto" style="color: slategray; border-radius: 5px;"
+       href="#ranking-system"><i class="fas fa-hand-holding-usd fa-2x" style="color:slategray;"></i></a>
+
+
+    <a class="navbar-brand pr-lg-5 mr-auto" style="color: slategray; border-radius: 5px;"
+       href="#historical-ranks" id="historical-ranks-navlink"><i class="fas fa-book fa-2x"
+                                                                 style="color:slategray;"></i></a>
+
+    <a class="navbar-brand" style="color: slategray; border-radius: 5px;" href="#">
+        <i class="fas fa-plus-square fa-2x" style="color:slategray;" id="collapse-all"></i>
+    </a>
+
+
+    <button class="navbar-toggler border-0" style="color: slategray;" type="button" data-toggle="collapse"
+            data-target="#navbar-weeks"
+            aria-controls="navbar-weeks" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fas fa-calendar-alt fa-2x"></i>
+    </button>
+
+    <div class="navbar-collapse" id="navbar-weeks">
+        <div class="navbar-nav ml-auto">
+            <div class="flex-row d-flex">
+                {% for week in rankings.week_ranks %}
+                    {% if week <= league.current_week %}
+                        <div class="flex-column nav-item ">
+                            <a class="nav-link small float-right" id="dropdown-week-{{ week }}"
+                               href="#week-{{ week }}"
+                               data-target="#week-{{ week }}-collapse">
+
+                                <span class="fa-stack fa-2x" style="color: slategray;">
+                                  <strong class="fas fa-calendar fa-stack-2x"></strong>
+                                  <strong class="fa-stack-1x pt-2 font-0-75x x-dark-text"
+                                          style="vertical-align: center;">{{ week }}</strong>
+                                </span>
+
+                            </a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</nav>
+
+<div style="padding-top: 80px;"></div>
+
+<script>
+    let collapseId = "collapse-all";
+    let collapseSelector = "#" + collapseId;
+
+    let collapsablesSelector = "[id*='-collapse']";
+
+    let collapseClass = "fa-minus-square";
+    let expandClass = "fa-plus-square";
+
+    $(document).ready(function () {
+        $("#updated").text(last_updated);
+    });
+
+
+    $('#collapse-all').on('click', function () {
+        if ($(this).hasClass(collapseClass)) {
+            $('.collapse').collapse('hide');
+        }
+        else if ($(this).hasClass(expandClass)) {
+            $('.collapse').collapse('show');
+        }
+        $(this).toggleClass(collapseClass).toggleClass(expandClass);
+    });
+
+
+    $("[id^='dropdown-week']").click(function () {
+        let target = $($(this).attr('href') + '-collapse');
+        if (target.is(':visible')) {
+            target.hide();
+        }
+        else {
+            target.show();
+        }
+    });
+
+    $("[id^='historical-ranks-navlink']").click(function () {
+        let hist_standings = $("#historical-ranks-collapse");
+        if (hist_standings.is(":visible")) {
+            hist_standings.children().hide();
+            hist_standings.hide();
+        }
+        else {
+            hist_standings.show();
+            hist_standings.children().show();
+        }
+    });
+
+    $(document).ready(function () {
+        $("#updated").text(moment().tz(PST).format(TIME_FORMAT));
+    })
+
+</script>

@@ -1,19 +1,146 @@
-{% extends "bootstrap/base.html" %}
+{% extends 'layout.html' %}
 
-{% import 'bootstrap/wtf.html'  as wtf %}
+{% block head %}
+    <script>
+        let leagueIdSelector = "#league-id";
+        let continue_sel = "#continue-id";
 
-{% block content %}
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-4 font-weight-bold">
-                <form method="POST" action="{{ url_for('rank') }}">
-                    {{ wtf.form_field(league_form.game_code) }}
-                    {{ wtf.form_field(league_form.season) }}
-                    {{ wtf.form_field(league_form.league_id) }}
-                    <input type="submit" value="Rank">
-                </form>
+        let inputPrompt = "Enter League ID";
+        let continuePrompt = "Press Continue";
+
+        let deleteDelay = 25;
+        let writeDelay = 100;
+
+        let blinkDelay = 750;
+
+        let inputTypingWait = writeDelay * inputPrompt.length;
+        let inputPromptCooldown = inputTypingWait;
+        let continuePromptCooldown = inputTypingWait * 2;
+        let deleteTime = inputPrompt.length * deleteDelay * 1.2;
+        let continuePromptTypingWait = continuePrompt.length * writeDelay * 1.25;
+
+        let prevStateEmpty = true;
+
+
+        let welcomeText = [["Today"], [" is"], [" PAYDAY"]];
+
+        $(document).ready(function () {
+            let leagueIdElement = $(leagueIdSelector);
+            let continueOutputElement = $(continue_sel);
+
+            function typeInputPrompt() {
+                continueOutputElement.unblink().delay(500).queue(function () {
+                    continueOutputElement.teletype({
+                        text: [inputPrompt],
+                        delay: writeDelay
+                    }).delay(inputTypingWait).queue(() => {
+                        continueOutputElement.blink({delay: blinkDelay}).dequeue();
+                    });
+                }).dequeue()
+            }
+
+            let typeInputPromptBounced = _.debounce(typeInputPrompt, inputTypingWait, {leading: false, trailing: true});
+
+            function typeContinuePrompt() {
+                continueOutputElement.unblink().delay(500).queue(function () {
+                    continueOutputElement.teletype({
+                        text: [continuePrompt],
+                        delay: writeDelay
+                    }).delay(continuePromptTypingWait).queue(() => {
+                        continueOutputElement.blink({delay: blinkDelay}).dequeue();
+                    });
+                }).dequeue()
+            }
+
+            $("#welcome-header").teletype({
+                text: welcomeText[0],
+                delay: writeDelay,
+                replace: false
+            }).delay(1000).queue(function () {
+                $(this).teletype({
+                    text: welcomeText[1],
+                    delay: writeDelay,
+                    replace: false
+                }).delay(1000).queue(function () {
+                    $(this).teletype({
+                        text: welcomeText[2],
+                        delay: writeDelay,
+                        replace: false
+                    }).dequeue();
+                }).dequeue();
+            });
+
+            setTimeout(typeInputPrompt, 4000);
+
+            leagueIdElement.keypress(function (e) {
+                if (!$.isNumeric(String.fromCharCode(e.keyCode))) {
+                    e.preventDefault();
+                }
+            });
+
+            leagueIdElement.on("input", function () {
+                if (leagueIdElement.val()) {
+                    if (!continueOutputElement.text() || continueOutputElement.text() === inputPrompt) {
+                        typeContinuePrompt();
+                    }
+                }
+                else {
+                    if (continueOutputElement.text() !== inputPrompt) {
+                        typeInputPromptBounced();
+                    }
+                }
+
+            });
+        });
+
+    </script>
+{% endblock %}
+
+
+{% block body %}
+    <div class="d-flex align-items-center flex-column justify-content-center h-100 dark-bg light-text" id="header">
+        <h1 class="display-4 pb-5 text-center arcade-text gold-text">
+            <output id="welcome-header"></output>
+        </h1>
+        <form method="POST" action="{{ url_for('rank') }}">
+            <div class="form-group">
+                <div class="dropdown">
+                    <button class="btn color-bg text-light dropdown-toggle w-100" type="button" id="game-code"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"
+                            name="game_code">
+                        {{ league_form.game_code.choices[0][1] }}
+                    </button>
+                    <select class="dropdown-menu" aria-labelledby="game-code" name="game_code">
+                        {% for choice in league_form.game_code.choices %}
+                            <option class="dropdown-item" type="button" name="game_code">{{ choice[0] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
             </div>
-        </div>
+            <div class="form-group">
+                <div class="dropdown">
+                    <button class="btn color-bg text-light dropdown-toggle w-100" type="button" id="season"
+                            data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false"
+                            name="season">
+                        {{ league_form.season.choices[0][1] }}
+                    </button>
+                    <select class="dropdown-menu" aria-labelledby="season" name="season">
+                        {% for choice in league_form.season.choices %}
+                            <option class="dropdown-item" type="button" name="season">{{ choice[0] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" id="league-id" name="league_id" placeholder="League ID">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-info btn-lg btn-block" type="submit">Continue</button>
+            </div>
+        </form>
+        <output id="continue-id"></output>
     </div>
 
 {% endblock %}

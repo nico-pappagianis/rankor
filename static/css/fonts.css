@@ -1,0 +1,71 @@
+.arcade-text {
+    font-family: "Press Start 2P", cursive;
+}
+
+body {
+    font-family: "Press Start 2P", cursive;
+}
+
+.font-2-5x {
+    font-size: 2.5em;
+}
+
+.font-0-3x {
+    font-size: 0.3em;
+}
+
+
+.font-0-325x {
+    font-size: 0.325em;
+}
+.font-0-35x {
+    font-size: 0.35em;
+}
+
+.font-0-4x {
+    font-size: 0.4em;
+}
+.font-0-5x {
+    font-size: 0.5em;
+}
+.font-0-6x {
+    font-size: 0.6em;
+}
+
+.font-0-65x {
+    font-size: 0.65em;
+}
+
+.font-0-7x {
+    font-size: 0.7em;
+}
+
+.font-0-75x {
+    font-size: 0.75em;
+}
+
+.font-0-8x {
+    font-size: 0.8em;
+}
+
+.font-0-9x {
+    font-size: .9em;
+}
+
+.font-0-95x {
+    font-size: .95em;
+}
+
+
+.font-1-25x {
+    font-size: 1.25em;
+}
+
+.font-1-5x {
+    font-size: 1.5em;
+}
+
+
+.font-3x {
+    font-size: 3em;
+}

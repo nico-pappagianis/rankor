@@ -1,9 +1,7 @@
 flask
-flask-bootstrap4
 flask-wtf
 requests
 untangle
 pytz
 jsonpickle
-jsonconversion
 flask-log

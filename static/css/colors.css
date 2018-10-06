@@ -1,0 +1,73 @@
+:root {
+    --dark-bg-color: #343a40;
+    --light-bg-color: #f8f9fa;
+}
+
+body {
+    background-color: var(--dark-bg-color);
+}
+
+.card, .pagewide {
+    background-color: var(--dark-bg-color);
+}
+
+.card-body {
+    background-color: lightgray;
+}
+
+.color-bg {
+    background-color: slategray;
+}
+
+.dark-bg {
+    background-color: var(--dark-bg-color);
+}
+
+.gray-bg {
+    background-color: lightgray;
+}
+
+.light-bg {
+    background-color: var(--light-bg-color);
+}
+
+.light-text {
+    color: whitesmoke;
+}
+
+.light-gray-text {
+    color: lightgray;
+}
+
+
+.gray-text {
+    color: slategray;
+}
+
+.dark-text {
+    color: darkslategray;
+}
+
+.x-dark-text {
+    color: var(--dark-bg-color);
+}
+
+.rank-increase {
+    color: #007100;
+}
+
+.rank-decrease {
+    color: #960000;
+}
+
+.rank-no-change {
+    color: #bdd1e5;
+}
+
+button:hover {
+    opacity: .9;
+}
+
+.gold-text {
+    color: gold;
+}

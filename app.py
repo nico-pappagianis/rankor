@@ -1,9 +1,7 @@
 import json
 import os
-import logging
 import jsonpickle
-from flask import Flask, render_template, request, jsonify
-from flask_bootstrap import Bootstrap
+from flask import render_template, request, jsonify
 
 import forms
 from league import League
@@ -30,7 +28,6 @@ app.config.update(dict(
 ))
 app.config['DEBUG'] = True
 
-Bootstrap(app)
 
 
 @app.after_request
