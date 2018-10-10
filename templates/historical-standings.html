@@ -34,7 +34,7 @@
 
 
                                 <div class="card-header border-0 header-style font-0-7x">
-                                    <div class="row flex-row d-flex flex-nowrap align-items-center text-center">
+                                    <div class="row flex-row d-flex flex-nowrap align-items-center mr-auto text-left">
                                         <div class="col flex-column">
                                             <strong>Rank</strong>
                                         </div>
@@ -61,14 +61,13 @@
 
                                 {% for current_rank in hist_rank %}
                                     <div class="card-body">
-                                        <div class="row flex-row d-flex flex-nowrap align-items-center text-center">
+                                        <div class="row flex-row d-flex flex-nowrap align-items-center mr-auto text-left">
                                             <div class="col flex-column">
                                                 <output id='{{ current_rank_id_prefix }}overall-rank'>{{ current_rank[1].overall_rank }}</output>
                                             </div>
 
                                             <div class="col-4 flex-column text-ellipsis font-0-95x">
-                                                <output class="float-left"
-                                                        id='{{ current_rank_id_prefix }}team-name'>{{ current_rank[1].team.name }}</output>
+                                                <output id='{{ current_rank_id_prefix }}team-name'>{{ current_rank[1].team.name }}</output>
                                             </div>
 
                                             <div class="col flex-column">
