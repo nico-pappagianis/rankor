@@ -1,16 +1,11 @@
 <nav class="navbar fixed-top navbar-expand-lg dark-bg">
-
-    <a class="navbar-brand font-weight-bold pr-lg-5 mr-auto font-0-8x" href="{{ league.url }}" target="_blank"
-       style="color:slategray;">
-        {{ league.name }} - {{ league.season }}</a>
-
-
     <div class="navbar-brand pr-lg-5 mr-auto">
         <div class="tooltip-container">
                 <span class="fa-stack" style="color: slategray;">
                     <span class="fas fa-sync-alt fa-stack-2x"></span>
                     <span class="fa-stack-1x">
-                        <span class="fa-stack font-0-65x">?</span>
+                        <span class="fa-stack font-0-65x" style="margin-top: -0.5em"><span
+                                class="fas fa-question"></span></span>
                     </span>
                 </span>
             <div class="tooltip-hover">
@@ -23,15 +18,19 @@
         </div>
     </div>
 
-    <a class="navbar-brand pr-lg-5 mr-auto" style="color: slategray; border-radius: 5px;"
-       href="#ranking-system"><i class="fas fa-hand-holding-usd fa-2x" style="color:slategray;"></i></a>
+    <a class="navbar-brand pr-lg-5 mr-auto btn" style="color: slategray; border-radius: 5px;"
+       href="#ranking-system"
+       data-target="#ranking-system" id="ranking-system-navlink"><i class="fas fa-hand-holding-usd fa-2x" style="color:slategray;"></i></a>
 
 
-    <a class="navbar-brand pr-lg-5 mr-auto" style="color: slategray; border-radius: 5px;"
-       href="#historical-ranks" id="historical-ranks-navlink"><i class="fas fa-book fa-2x"
-                                                                 style="color:slategray;"></i></a>
+    <a class="navbar-brand pr-lg-5 mr-auto btn" style="color: slategray; border-radius: 5px;"
+       href="#historical-standings"
+       role="button" data-toggle="collapse"
+       data-target="#hist-standings-collapse"
+       id="historical-ranks-navlink"><i class="fas fa-book fa-2x"
+                                        style="color:slategray;"></i></a>
 
-    <a class="navbar-brand" style="color: slategray; border-radius: 5px;" href="#">
+    <a class="navbar-brand btn" style="color: slategray; border-radius: 5px;" role="button">
         <i class="fas fa-plus-square fa-2x" style="color:slategray;" id="collapse-all"></i>
     </a>
 
@@ -47,10 +46,14 @@
             <div class="flex-row d-flex">
                 {% for week in rankings.week_ranks %}
                     {% if week <= league.current_week %}
+
                         <div class="flex-column nav-item ">
-                            <a class="nav-link small float-right" id="dropdown-week-{{ week }}"
+                            <a class="nav-link float-right btn font-0-7x" id="week-{{ week }}-navlink"
                                href="#week-{{ week }}"
-                               data-target="#week-{{ week }}-collapse">
+                               data-target="#week-{{ week }}-rankings-collapse"
+                               data-toggle="collapse"
+                               aria-expanded="false"
+                               aria-controls="week-{{ week }}-rankings-collapse">
 
                                 <span class="fa-stack fa-2x" style="color: slategray;">
                                   <strong class="fas fa-calendar fa-stack-2x"></strong>
@@ -60,15 +63,20 @@
 
                             </a>
                         </div>
+
                     {% endif %}
                 {% endfor %}
             </div>
         </div>
     </div>
-
 </nav>
 
-<div style="padding-top: 80px;"></div>
+<div class="m-auto h4 pb-5" style="min-width: 725px; max-width: 725px;">
+    <a href="{{ league.url }}" target="_blank"
+       style="color:slategray;">
+        {{ league.name }} - {{ league.season }}</a>
+</div>
+
 
 <script>
     let collapseId = "collapse-all";
@@ -94,31 +102,23 @@
         $(this).toggleClass(collapseClass).toggleClass(expandClass);
     });
 
+    $("[id*='navlink']").on('click', function (e) {
+        e.preventDefault();
+        let parent = $("#week-rankings-collapse");
 
-    $("[id^='dropdown-week']").click(function () {
-        let target = $($(this).attr('href') + '-collapse');
-        if (target.is(':visible')) {
-            target.hide();
+        $('html, body').animate({
+            scrollTop: $($(this).attr('href')).offset().top - 150
+        }, 500, 'linear');
+
+        if (parent.is(':hidden')) {
+            parent.collapse("show");
         }
-        else {
-            target.show();
-        }
+        $($(this).attr('data-target')).collapse("show");
     });
 
-    $("[id^='historical-ranks-navlink']").click(function () {
-        let hist_standings = $("#historical-ranks-collapse");
-        if (hist_standings.is(":visible")) {
-            hist_standings.children().hide();
-            hist_standings.hide();
-        }
-        else {
-            hist_standings.show();
-            hist_standings.children().show();
-        }
-    });
 
     $(document).ready(function () {
         $("#updated").text(moment().tz(PST).format(TIME_FORMAT));
-    })
+    });
 
 </script>

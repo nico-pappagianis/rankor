@@ -24,18 +24,28 @@
   padding-left: 0.2rem !important;
 }
 
-.pl-0-225{
-  padding-left: 0.225rem !important;
-}
 
 .form-group {
     font-weight: bold;
     color: darkslategray;
 }
 
+body {
+    padding-top: 100px;
+}
+
 .section-anchor {
     padding-top: 200px;
     margin-top: -200px;
+}
+
+.nav {
+  text-align: center;
+}
+
+.navbar-nav .nav-item {
+  float: inherit;
+  display: inline-block;
 }
 
 .tooltip-content {
@@ -86,7 +96,6 @@
     text-overflow: ellipsis;
     max-width: 100%;
     padding: 0px;
-    float: left;
 }
 
 .flex-card {

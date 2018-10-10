@@ -1,149 +1,115 @@
 <div class="container-fluid pl-0 font-0-8x">
+    <div class=" text-center justify-content-lg-center d-lg-flex section-anchor">
 
-    <div class="flex-row justify-content-lg-center d-lg-flex section-anchor">
+        <div id="week-rankings-accordion">
 
-        <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;">
-            <div class="card-title font-weight-bold btn header-style" id="week-ranks-card"
-                    data-toggle="collapse" data-target="#week-ranks-collapse"
-                    aria-controls="week-ranks-collapse">
+            <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;" id="week-ranks-card">
 
-                <span class="fa-stack font-3x text-center;">
-                    <span class="fas fa-calendar fa-stack-2x"></span>
-                        <span class="fa-stack-1x font-0-325x pt-2-5"
-                              style="color: slategray;">{{ league.start_week }} - {{ league.latest_week }}</span>
-                </span>
-            </div>
-        </div>
-
-    </div>
-    <div class="collapse" id="week-ranks-collapse">
-        {% for week, week_ranks in rankings.week_ranks.items() %}
-            {% set week_in_progress = league.game_weeks[week].week_in_progress %}
-            {% set week_color = "#fff3bb" if week_in_progress else "ghostwhite" %}
-            {% set week_collapse_id = 'week-{week}-collapse'.format(week=week) %}
-
-
-            <div class="flex-row justify-content-lg-center d-lg-flex section-anchor" id="week-{{ week }}">
-
-                <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;">
-
-                    <div class="card-title font-weight-bold btn header-style text-center text-lg-center"
-
-                         data-toggle="collapse"
-                         data-target="#{{ week_collapse_id }}"
-                         aria-controls="{{ week_collapse_id }}">
-
-                          <strong class="font-2-5x" style="color: {{ week_color }};">Week {{ week }}</strong>
-                    </div>
-
-                    <div class="collapse" id="{{ week_collapse_id }}" >
-
-                        <div class="card-header border-0 header-style align-items-center m-auto ">
-                            <div class="row flex-row d-flex flex-nowrap align-items-center">
-                                <div class="col flex-column text-left">
-                                    Rank
-                                </div>
-                                <div class="col-3 flex-column text-left">
-                                    Team
-                                </div>
-                                <div class="col flex-column text-right">
-                                    <div class="row flex-row flex-nowrap">
-                                        <div class="col flex-column" style="margin-right: -30px;">
-                                            Pts
-                                        </div>
-                                        <div class="col flex-column small {{ 'far fa-clock' if week_in_progress else '' }}"
-                                             style="color: #fff3bb; vertical-align: super">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col flex-column">
-                                    <div class="row flex-row flex-nowrap">
-                                        <div class="col flex-column text-right pl-5" style="margin-right: -30px;">
-                                            OPts
-                                        </div>
-                                        <div class="col flex-column small {{ 'far fa-clock' if week_in_progress else '' }}"
-                                             style="color: #fff3bb; vertical-align: super">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-2 flex-column">
-                                    Opp
-                                </div>
-                                <div class="col flex-column text-right pl-4">
-                                    <div class="row flex-row flex-nowrap">
-                                        <div class="col flex-column" style="margin-right: -30px;">
-                                            W/L
-                                        </div>
-                                        <div class="col flex-column small {{ 'far fa-clock' if week_in_progress else '' }}"
-                                             style="color: #fff3bb; vertical-align: super">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col flex-column">
-                                    <div class="row flex-row flex-nowrap">
-                                        <div class="col flex-column text-right" style="margin-right: -30px;">
-                                            $$
-                                        </div>
-                                        <div class="col flex-column small {{ 'far fa-clock' if week_in_progress else '' }}"
-                                             style="color: #fff3bb; vertical-align: super">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        {% for rank in week_ranks %}
-
-                            {% set rank_id_prefix = [week, rank.team.team_id, rank.opponent.team_id] | join('-') %}
-
-                            <div class="card-body">
-                                <div class="row flex-row d-flex flex-nowrap align-items-center m-auto">
-                                    <div class="col flex-column text-left">
-                                        <output id="{{ rank_id_prefix }}-rank">{{ rank.rank }}</output>
-                                    </div>
-                                    <div class="col-3 flex-column text-ellipsis font-0-95x">
-                                        <output id="{{ rank_id_prefix }}-team-name">{{ rank.team.name }}</output>
-                                    </div>
-                                    <div class="col flex-column text-right">
-                                        <output id="{{ rank_id_prefix }}-team-points">{{ "%.2f" | format(rank.team_points) }}</output>
-                                    </div>
-                                    <div class="col flex-column text-left">
-                                        <output id="{{ rank_id_prefix }}-opponent-points">{{ "%.2f" | format(rank.opponent_points) }}</output>
-                                    </div>
-                                    <div class="col-2 flex-column text-ellipsis font-0-8x">
-                                        <output id="{{ rank_id_prefix }}-opponent-name">{{ rank.opponent.name }}</output>
-                                    </div>
-                                    <div class="col flex-column text-right">
-                                        <output id="{{ rank_id_prefix }}-result">{{ rank.result }}</output>
-                                    </div>
-                                    <div class="col flex-column text-right">
-                                        <output id="{{ rank_id_prefix }}-ranking-points">{{ rank.ranking_points }}</output>
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+                <div class="card-title font-weight-bold btn header-style text-center text-lg-center"
+                     id="week-rankings-heading"
+                     role="button" data-toggle="collapse" data-target="#week-rankings-collapse" aria-expanded="true"
+                     aria-controls="week-rankings-collapse">
+                        <span class="fa-stack font-3x text-center;">
+                            <span class="fas fa-calendar fa-stack-2x"></span>
+                            <span class="fa-stack-1x font-0-325x pt-2-5"
+                                  style="color: slategray;">{{ league.start_week }} - {{ league.latest_week }}</span>
+                        </span>
                 </div>
             </div>
-        {% endfor %}
+
+            <div id="week-rankings-collapse" class="collapse show" data-parent="#week-rankings-accordion"
+                 aria-labelledby="week-rankings-heading">
+
+
+                {% for week, week_ranks in rankings.week_ranks.items() %}
+                    {% set week_in_progress = league.game_weeks[week].week_in_progress %}
+                    {% set week_color = "#fff3bb" if week_in_progress else "ghostwhite" %}
+                    {% set week_collapse_id = 'week-{week}-collapse'.format(week=week) %}
+                    {% set week_heading_id = 'week-{week}-heading'.format(week=week) %}
+
+                    <div id="week-{{ week }}-rankings-accordion">
+                        <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;"  id="week-{{ week }}">
+
+                            <div class="card-title font-weight-bold btn header-style text-center text-lg-center"
+                                 id="week-{{ week }}-rankings-heading" role="button" data-toggle="collapse"
+                                 data-target="#week-{{ week }}-rankings-collapse"
+                                 aria-expanded="false" aria-controls="week-{{ week }}-rankings-collapse">
+                                Week {{ week }}
+                            </div>
+                            <div class="collapse" id="week-{{ week }}-rankings-collapse"
+                                 data-parent="#week-{{ week }}-rankings-accordion"
+                                 aria-labelledby="week-{{ week }}-rankings-heading">
+
+
+                                <div class="card-header border-0 header-style align-items-center">
+
+                                    <div class="row flex-row d-flex flex-nowrap">
+                                        <div class="col flex-column text-left">
+                                            Rank
+                                        </div>
+
+                                        <div class="col-3 flex-column text-left">
+                                            Team
+                                        </div>
+
+                                        <div class="col flex-column text-left">
+                                            Pts
+                                        </div>
+
+                                        <div class="col flex-column text-left pl-5">
+                                            OPts
+                                        </div>
+
+                                        <div class="col-2 flex-column text-right">
+                                            Opp
+                                        </div>
+
+                                        <div class="col flex-column text-right pl-5 ">
+                                            W/L
+                                        </div>
+
+                                        <div class="col flex-column pl-1">
+                                            $$
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% for rank in week_ranks %}
+
+                                    {% set rank_id_prefix = [week, rank.team.team_id, rank.opponent.team_id] | join('-') %}
+
+                                    <div class="card-body">
+                                        <div class="row flex-row d-flex flex-nowrap align-items-center">
+                                            <div class="col flex-column mr-auto text-left">
+                                                <output id="{{ rank_id_prefix }}-rank">{{ rank.rank }}</output>
+                                            </div>
+                                            <div class="col-3 flex-column text-ellipsis font-0-8x mr-auto text-left">
+                                                <output id="{{ rank_id_prefix }}-team-name">{{ rank.team.name }}</output>
+                                            </div>
+                                            <div class="col flex-column mr-auto text-left">
+                                                <output id="{{ rank_id_prefix }}-team-points">{{ "%.2f" | format(rank.team_points) }}</output>
+                                            </div>
+                                            <div class="col flex-column mr-auto text-left">
+                                                <output id="{{ rank_id_prefix }}-opponent-points">{{ "%.2f" | format(rank.opponent_points) }}</output>
+                                            </div>
+                                            <div class="col-2 flex-column text-ellipsis font-0-8x mr-auto text-left">
+                                                <output id="{{ rank_id_prefix }}-opponent-name">{{ rank.opponent.name }}</output>
+                                            </div>
+                                            <div class="col flex-column ml-auto text-right">
+                                                <output id="{{ rank_id_prefix }}-result">{{ rank.result }}</output>
+                                            </div>
+                                            <div class="col flex-column ml-auto text-right">
+                                                <output id="{{ rank_id_prefix }}-ranking-points">{{ rank.ranking_points }}</output>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </div>
-
-{#<script>#}
-{#    $(document).ready(function () {#}
-{#        $("#week-ranks-card").click(function () {#}
-{#            let weekRanksCollapse = $("#week-ranks-collapse");#}
-{#            if (weekRanksCollapse.is(":hidden")) {#}
-{#                weekRanksCollapse.show();#}
-{#                weekRanksCollapse.children().show();#}
-{#            }#}
-{#            else {#}
-{#                weekRanksCollapse.children().hide();#}
-{#                weekRanksCollapse.hide();#}
-{#            }#}
-{#        });#}
-{#    });#}
-{##}
-{#</script>#}
-{##}
-{##}
