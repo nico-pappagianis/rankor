@@ -61,12 +61,12 @@ class League(Serializable):
         else:
             self.__init_from_data()
 
-        # self.__load_weeks()
-        # self.current_week_start_time = self.game_weeks[self.current_week].week.start_day.start_time
-        # self.current_week_end_time = self.game_weeks[self.current_week].week.end_day.end_time
-        # self.__update_current_week()
-        #
-        # self.__save()
+        self.__load_weeks()
+        self.current_week_start_time = self.game_weeks[self.current_week].week.start_day.start_time
+        self.current_week_end_time = self.game_weeks[self.current_week].week.end_day.end_time
+        self.__update_current_week()
+
+        self.__save()
 
     def refresh_current_week(self):
         if self.game_weeks[self.current_week].week_in_progress:
