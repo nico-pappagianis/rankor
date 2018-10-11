@@ -47,13 +47,15 @@ def index():
 @app.route('/rank', methods=['POST'])
 @app.route('/rank/<game_code>/<season>/<league_id>', methods=['GET'])
 def rank(game_code=None, season=None, league_id=None):
+    standings_comparison_form = forms.StandingsComparison()
     if request.method == 'GET':
         league = League(game_code, season, league_id)
     else:
         league = League(game_code=request.form['game_code'], season=request.form['season'],
                         league_id=request.form['league_id'])
     rankings = LeagueRankings(league, 10, 5, 1)
-    return render_template('league-rankings.html', league=league, rankings=rankings, RankChange=RankChange, jsonpickle=jsonpickle)
+    standings_comparison_form.start_week.choices = standings_comparison_form.end_week.choices = [(week, "Week " + str(week)) for week in range(league.start_week, league.current_week)]
+    return render_template('league-rankings.html', league=league, rankings=rankings, RankChange=RankChange, jsonpickle=jsonpickle, standings_comparison_form=standings_comparison_form)
 
 
 @app.route('/update_in_progress_games')

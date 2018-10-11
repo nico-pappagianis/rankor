@@ -1,0 +1,34 @@
+<div class="container-fluid pl-0 font-0-8x">
+    <form method="POST" action="{{ url_for('rank') }}">
+        <div class="form-group">
+            <div class="dropdown">
+                <button class="btn color-bg text-light dropdown-toggle w-100" type="button" id="game-code"
+                        data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"
+                        name="game_code">
+                    Start Week
+                </button>
+                <select class="dropdown-menu" aria-labelledby="game-code" name="game_code">
+                    {% for choice in standings_comparison_form.start_week.choices %}
+                        <option class="dropdown-item" type="button" name="game_code">{{ choice[0] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="dropdown">
+                <button class="btn color-bg text-light dropdown-toggle w-100" type="button" id="game-code"
+                        data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false"
+                        name="game_code">
+                    End Week
+                </button>
+                <select class="dropdown-menu" aria-labelledby="end-week" name="end-">
+                    {% for choice in standings_comparison_form.end_week.choices %}
+                        <option class="dropdown-item" type="button" name="game_code">{{ choice[0] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </form>
+</div>

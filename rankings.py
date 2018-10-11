@@ -32,9 +32,13 @@ class LeagueRankings(Serializable):
         self.outscore_value = outscore_value
         self.league = league
         self.week_ranks = {}
+        self.historical_ranks = {}
 
         self.set_week_ranks()
+
+        [self.historical_ranks.update(week=self.get_season_ranks(last_week=week)) for week in range(1, league.current_week)]
         self.sorted_historical_ranks = [(ranks_to_sorted_array(self.get_season_ranks(last_week=week)), week) for week in range(1, league.current_week)]
+
         self.season_ranks = self.get_season_ranks()
         self.season_ranks_prior = self.get_season_ranks(last_week=league.current_week - 1)
         self.season_ranks_in_progress = self.get_season_ranks(True)
@@ -65,7 +69,7 @@ class LeagueRankings(Serializable):
                 break
 
             for week_rank in week_ranks:
-                now = PST.localize(datetime.now())
+                now = datetime.utcnow() + PST.utcoffset(datetime.utcnow())
                 if now < week_rank.game_week.week.start_day.start_time:
                     continue
 
@@ -92,7 +96,7 @@ class LeagueRankings(Serializable):
 
     def set_week_ranks(self):
         self.week_ranks = {}
-        now = PST.localize(datetime.now())
+        now = datetime.utcnow() + PST.utcoffset(datetime.utcnow())
         for week, game_week in self.league.game_weeks.items():
 
             if now < game_week.week.start_day.start_time:

@@ -102,7 +102,7 @@ class GameWeek(Serializable):
 
     @property
     def week_in_progress(self):
-        now = PST.localize(datetime.now())
+        now = datetime.utcnow() + PST.utcoffset(datetime.utcnow())
         if self.week.start_day.start_time <= now <= self.week.end_day.end_time:
             logger.info(
                 'Week is in progress: week start day: {week_start_day},  current time: {now}, week end day: {week_end_day}'
