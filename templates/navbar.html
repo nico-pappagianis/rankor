@@ -20,7 +20,8 @@
 
     <a class="navbar-brand pr-lg-5 mr-auto btn" style="color: slategray; border-radius: 5px;"
        href="#ranking-system"
-       data-target="#ranking-system" id="ranking-system-navlink"><i class="fas fa-hand-holding-usd fa-2x" style="color:slategray;"></i></a>
+       data-target="#ranking-system" id="ranking-system-navlink"><i class="fas fa-hand-holding-usd fa-2x"
+                                                                    style="color:slategray;"></i></a>
 
 
     <a class="navbar-brand pr-lg-5 mr-auto btn" style="color: slategray; border-radius: 5px;"
@@ -71,10 +72,12 @@
     </div>
 </nav>
 
-<div class="m-auto h4 pb-5" style="min-width: 725px; max-width: 725px;">
-    <a href="{{ league.url }}" target="_blank"
-       style="color:slategray;">
-        {{ league.name }} - {{ league.season }}</a>
+<div class="card m-auto">
+    <div class="card-title">
+        <a href="{{ league.url }}" target="_blank"
+           style="color:slategray;">
+            {{ league.name }} - {{ league.season }}</a>
+    </div>
 </div>
 
 

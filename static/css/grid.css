@@ -34,6 +34,11 @@ body {
     padding-top: 100px;
 }
 
+.card, .card-footer{
+    min-width: 725px;
+    max-width: 725px;
+}
+
 .section-anchor {
     padding-top: 200px;
     margin-top: -200px;
@@ -90,7 +95,15 @@ body {
     -webkit-transition: opacity 0s;
 }
 
-.text-ellipsis {
+.text-ellipsis-100 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    padding: 0px;
+}
+
+.text-ellipsis-75 {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

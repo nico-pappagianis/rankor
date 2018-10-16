@@ -3,6 +3,7 @@ import os
 from datetime import datetime, timedelta
 from enum import Enum, IntEnum
 
+from team import Team
 from data_attributes import MatchupAttrs, TeamAttrs, YAHOO_DATE_FMT, DATETIME_FMT, PST
 from fantasy_data import FantasyData, get_attribute
 from serializable import Serializable
@@ -102,7 +103,7 @@ class GameWeek(Serializable):
 
     @property
     def week_in_progress(self):
-        now = datetime.utcnow() + PST.utcoffset(datetime.utcnow())
+        now = PST.localize(datetime.utcnow() + PST.utcoffset(datetime.utcnow()))
         if self.week.start_day.start_time <= now <= self.week.end_day.end_time:
             logger.info(
                 'Week is in progress: week start day: {week_start_day},  current time: {now}, week end day: {week_end_day}'
@@ -147,9 +148,14 @@ class MatchupsData(FantasyData):
                 end_date = datetime.strptime(get_attribute(matchup_data, MatchupAttrs.WEEK_END_DATE), YAHOO_DATE_FMT)
                 self.game_week = GameWeek(week, start_date, end_date)
 
-            teams = get_attribute(matchup_data, MatchupAttrs.MATCHUP_TEAMS)
-            team1 = league.teams[int(get_attribute(teams[0], TeamAttrs.TEAM_ID))]
-            team1_points = float(get_attribute(teams[0], MatchupAttrs.MATCHUP_TEAM_POINTS))
-            team2 = league.teams[int(get_attribute(teams[1], TeamAttrs.TEAM_ID))]
-            team2_points = float(get_attribute(teams[1], MatchupAttrs.MATCHUP_TEAM_POINTS))
+            teams_data = get_attribute(matchup_data, MatchupAttrs.MATCHUP_TEAMS)
+
+            team1_points = float(get_attribute(teams_data[0], MatchupAttrs.MATCHUP_TEAM_POINTS))
+            team1 = Team.from_data(teams_data[0])
+            league.teams[team1.team_id] = team1
+
+            team2_points = float(get_attribute(teams_data[1], MatchupAttrs.MATCHUP_TEAM_POINTS))
+            team2 = Team.from_data(teams_data[1])
+            league.teams[team2.team_id] = team2
+
             self.game_week.add_matchup(Matchup(week, team1, team1_points, team2, team2_points))

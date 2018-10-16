@@ -1,34 +1,117 @@
 <div class="container-fluid pl-0 font-0-8x">
-    <form method="POST" action="{{ url_for('rank') }}">
-        <div class="form-group">
-            <div class="dropdown">
-                <button class="btn color-bg text-light dropdown-toggle w-100" type="button" id="game-code"
-                        data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false"
-                        name="game_code">
-                    Start Week
-                </button>
-                <select class="dropdown-menu" aria-labelledby="game-code" name="game_code">
-                    {% for choice in standings_comparison_form.start_week.choices %}
-                        <option class="dropdown-item" type="button" name="game_code">{{ choice[0] }}</option>
-                    {% endfor %}
-                </select>
+    <div class=" text-center justify-content-lg-center d-lg-flex section-anchor">
+
+        <div id="season-standings-accordion">
+
+            <div class="card flex-card border-0 p-2"
+                 id="standings-diff-card">
+
+                <div class="card-title font-weight-bold btn header-style text-center text-lg-center"
+                     id="standings-diff-heading"
+                     role="button" data-toggle="collapse" data-target="#standings-diff-collapse" aria-expanded="true"
+                     aria-controls="standings-diff-collapse">
+
+                    <div class="tooltip-container">
+                        <span class="fa-stack font-3x text-center;">
+                            <span class="fas fa-calendar fa-stack-2x"></span>
+                            <span class="fa-stack-1x font-0-8x pt-3"
+                                  style="color: slategray;">?</span>
+                        </span>
+                        <div class="tooltip-hover" aria-hidden="true">
+                                    <span class="tooltip-content">
+                                        Compare standings between weeks
+                                    </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="standings-diff-collapse" class="collapse show" data-parent="#standings-diff-accordion"
+                 aria-labelledby="standings-diff-heading">
+
+                <div class="card flex-card border-0 p-2">
+                    <div class="card-header border-0 header-style">
+
+                        <div class="row flex-row d-flex flex-nowrap align-items-center font-0-7x m-auto">
+                            <div class="col flex-column">
+                                <div class="tooltip-container">
+                                    <strong>Start Week</strong>
+
+                                    <div class="tooltip-hover" aria-hidden="true">
+                                    <span class="tooltip-content" style="width:200px; position:relative; left: 50px">
+                                        The starting week to use for standings comparision.
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col flex-column">
+                                <div class="tooltip-container">
+                                    <strong>End Week</strong>
+
+                                    <div class="tooltip-hover" aria-hidden="true">
+                                    <span class="tooltip-content" style="width:200px; position:relative; left: 50px">
+                                        The ending week to use for standings comparision.
+                                    </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="POST" action="{{ url_for('rank') }}">
+                        <div class="row flex-row">
+                            <div class="col flex-col">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <select class="custom-select gray-bg dark-text" id="start-week-select"
+                                                name="start-week">
+{#                                            <option selected>Choose Starting Week</option>#}
+                                            {% for choice in standings_comparison_form.start_week.choices %}
+                                                <option value="{{ choice[0] }}">{{ choice[0] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col flex-col">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <select class="custom-select gray-bg dark-text" id="end-week-select"
+                                                name="end-week">
+{#                                            <option selected>Choose Starting Week</option>#}
+                                            {% for choice in standings_comparison_form.end_week.choices[1:standings_comparison_form.end_week.choices|length] %}
+                                                <option value="{{ choice[0] }}">{{ choice[0] }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-block  gray-bg" type="submit">Compare</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <div class="dropdown">
-                <button class="btn color-bg text-light dropdown-toggle w-100" type="button" id="game-code"
-                        data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false"
-                        name="game_code">
-                    End Week
-                </button>
-                <select class="dropdown-menu" aria-labelledby="end-week" name="end-">
-                    {% for choice in standings_comparison_form.end_week.choices %}
-                        <option class="dropdown-item" type="button" name="game_code">{{ choice[0] }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
-    </form>
+    </div>
 </div>
+{% include 'standings-comparison.html' %}
+
+<script>
+    $(document).ready(function () {
+        let startWeekSelectId = "#start-week-select";
+        let endWeekSelectId  = "#end-week-select";
+        let historicalStandings = {{ rankings.sorted_historical_ranks|tojson|safe }};
+
+        $("#start-week-select, #end-week-select").change(function () {
+            let startWeek = $(startWeekSelectId).val();
+            let endWeek = $(endWeekSelectId).val();
+            if (startWeek !== endWeek) {
+                $("#standings-comparison").show();
+                let comparisonStandings = [historicalStandings[startWeek], historicalStandings[endWeek]];
+                compare(comparisonStandings);
+            }
+        });
+    })
+</script>

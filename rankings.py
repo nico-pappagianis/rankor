@@ -69,7 +69,7 @@ class LeagueRankings(Serializable):
                 break
 
             for week_rank in week_ranks:
-                now = datetime.utcnow() + PST.utcoffset(datetime.utcnow())
+                now = PST.localize(datetime.utcnow() + PST.utcoffset(datetime.utcnow()))
                 if now < week_rank.game_week.week.start_day.start_time:
                     continue
 
@@ -96,7 +96,7 @@ class LeagueRankings(Serializable):
 
     def set_week_ranks(self):
         self.week_ranks = {}
-        now = datetime.utcnow() + PST.utcoffset(datetime.utcnow())
+        now = PST.localize(datetime.utcnow() + PST.utcoffset(datetime.utcnow()))
         for week, game_week in self.league.game_weeks.items():
 
             if now < game_week.week.start_day.start_time:

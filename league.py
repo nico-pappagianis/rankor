@@ -97,7 +97,7 @@ class League(Serializable):
         return False
 
     def __update_current_week(self):
-        now = datetime.utcnow() + PST.utcoffset(datetime.utcnow())
+        now = PST.localize(datetime.utcnow() + PST.utcoffset(datetime.utcnow()))
         if self.current_week_end_time <= now:
             logger.info('Updating current week. End of week {week}'.format(week=self.current_week))
             league_data = LeagueData(self.game_code, self.season, self.league_id)

@@ -3,7 +3,7 @@
 
         <div id="week-rankings-accordion">
 
-            <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;" id="week-ranks-card">
+            <div class="card flex-card border-0 p-2" id="week-ranks-card">
 
                 <div class="card-title font-weight-bold btn header-style text-center text-lg-center"
                      id="week-rankings-heading"
@@ -28,7 +28,7 @@
                     {% set week_heading_id = 'week-{week}-heading'.format(week=week) %}
 
                     <div id="week-{{ week }}-rankings-accordion">
-                        <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;"  id="week-{{ week }}">
+                        <div class="card flex-card border-0 p-2"  id="week-{{ week }}">
 
                             <div class="card-title font-weight-bold btn header-style text-center text-lg-center"
                                  id="week-{{ week }}-rankings-heading" role="button" data-toggle="collapse"
@@ -80,19 +80,19 @@
 
                                     <div class="card-body">
                                         <div class="row flex-row d-flex flex-nowrap align-items-center">
-                                            <div class="col flex-column mr-auto text-left">
+                                            <div class="col-1 text-left">
                                                 <output id="{{ rank_id_prefix }}-rank">{{ rank.rank }}</output>
                                             </div>
-                                            <div class="col-3 flex-column text-ellipsis font-0-8x mr-auto text-left">
+                                            <div class="col-3 flex-column text-ellipsis-100 font-0-8x text-left">
                                                 <output id="{{ rank_id_prefix }}-team-name">{{ rank.team.name }}</output>
                                             </div>
-                                            <div class="col flex-column mr-auto text-left">
+                                            <div class="col-2 text-left">
                                                 <output id="{{ rank_id_prefix }}-team-points">{{ "%.2f" | format(rank.team_points) }}</output>
                                             </div>
-                                            <div class="col flex-column mr-auto text-left">
+                                            <div class="col-2 text-left">
                                                 <output id="{{ rank_id_prefix }}-opponent-points">{{ "%.2f" | format(rank.opponent_points) }}</output>
                                             </div>
-                                            <div class="col-2 flex-column text-ellipsis font-0-8x mr-auto text-left">
+                                            <div class="col-2 flex-column text-ellipsis-75 font-0-8x text-left">
                                                 <output id="{{ rank_id_prefix }}-opponent-name">{{ rank.opponent.name }}</output>
                                             </div>
                                             <div class="col flex-column ml-auto text-right">

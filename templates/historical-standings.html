@@ -1,7 +1,7 @@
 <div class="container-fluid pl-0 font-0-8x" id="historical-standings">
     <div class=" text-center justify-content-lg-center d-lg-flex section-anchor">
         <div id="hist-standings-accordion">
-            <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;"
+            <div class="card flex-card border-0 p-2"
                  id="hist-standings-card">
 
                 <div class="card-title font-weight-bold btn header-style" id="hist-standings-heading"
@@ -18,7 +18,7 @@
                 {% for hist_rank, week in rankings.sorted_historical_ranks %}
 
                     <div id="week-{{ week }}-hist-standings-accordion">
-                        <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;">
+                        <div class="card flex-card border-0 p-2">
 
                             <div class="card-title font-weight-bold btn header-style"
                                  id="week-{{ week }}-hist-standings-heading" role="button" data-toggle="collapse"
@@ -34,7 +34,7 @@
 
 
                                 <div class="card-header border-0 header-style font-0-7x">
-                                    <div class="row flex-row d-flex flex-nowrap align-items-center mr-auto text-left">
+                                    <div class="row flex-row d-flex flex-nowrap align-items-center text-left">
                                         <div class="col flex-column">
                                             <strong>Rank</strong>
                                         </div>
@@ -44,13 +44,13 @@
                                         <div class="col flex-column">
                                             <strong>$$</strong>
                                         </div>
-                                        <div class="col-2 flex-column">
+                                        <div class="col flex-column">
                                             <strong>W-L</strong>
                                         </div>
                                         <div class="col flex-column">
                                             <strong>Avg Rank</strong>
                                         </div>
-                                        <div class="col flex-column">
+                                        <div class="col flex-column text-right">
                                             <strong>O/S</strong>
                                         </div>
                                         <div class="col flex-column">
@@ -61,12 +61,12 @@
 
                                 {% for current_rank in hist_rank %}
                                     <div class="card-body">
-                                        <div class="row flex-row d-flex flex-nowrap align-items-center mr-auto text-left">
+                                        <div class="row flex-row d-flex flex-nowrap align-items-center text-left">
                                             <div class="col flex-column">
                                                 <output id='{{ current_rank_id_prefix }}overall-rank'>{{ current_rank[1].overall_rank }}</output>
                                             </div>
 
-                                            <div class="col-4 flex-column text-ellipsis font-0-95x">
+                                            <div class="col-4 flex-column text-ellipsis-100 font-0-75x">
                                                 <output id='{{ current_rank_id_prefix }}team-name'>{{ current_rank[1].team.name }}</output>
                                             </div>
 
@@ -74,7 +74,7 @@
                                                 <output id='{{ current_rank_id_prefix }}ranking-points'>{{ current_rank[1].ranking_points }}</output>
                                             </div>
 
-                                            <div class="col-2 flex-column">
+                                            <div class="col flex-column">
                                                 <output id='{{ current_rank_id_prefix }}record'>{{ current_rank[1].wins }}-{{ current_rank[1].losses }}{{ '-' ~ current_rank[1].draws if current_rank[1].draws else '' }}</output>
                                             </div>
 
@@ -82,7 +82,7 @@
                                                 <output id='{{ current_rank_id_prefix }}avg-rank'>{{ "%.1f" % (current_rank[1].avg_rank | round(2)) }}</output>
                                             </div>
 
-                                            <div class="col flex-column">
+                                            <div class="col flex-column text-right">
                                                 <output id='{{ current_rank_id_prefix }}outscores'>{{ current_rank[1].outscores }}</output>
                                             </div>
 

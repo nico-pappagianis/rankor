@@ -122,13 +122,12 @@
                 <div class="dropdown">
                     <button class="btn color-bg text-light dropdown-toggle w-100" type="button" id="season"
                             data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false"
-                            name="season">
+                            aria-haspopup="true" aria-expanded="false">
                         {{ league_form.season.choices[0][1] }}
                     </button>
                     <select class="dropdown-menu" aria-labelledby="season" name="season">
                         {% for choice in league_form.season.choices %}
-                            <option class="dropdown-item" type="button" name="season">{{ choice[0] }}</option>
+                            <option class="dropdown-item" type="button">{{ choice[0] }}</option>
                         {% endfor %}
                     </select>
                 </div>

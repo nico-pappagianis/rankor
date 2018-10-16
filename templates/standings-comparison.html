@@ -1,0 +1,108 @@
+<div class="container-fluid pl-0 font-0-8x" id="standings-comparison" style="display: none">
+    <div class=" text-center justify-content-lg-center d-lg-flex section-anchor">
+        <div class="row flex-row">
+            <div class="col flex-col">
+                <div class="card flex-card border-0 p-2"
+                     id="start-week-comparison-card">
+
+                    <div class="card-title font-weight-bold btn header-style"
+                         id="start-week-standings-comparison-heading">
+
+                        <output id="standings-comparison-title-output"></output>
+                    </div>
+
+                    <div class="card-header border-0 header-style font-0-7x">
+                        <div class="row flex-row d-flex flex-nowrap align-items-center mr-auto text-left">
+                            <div class="col flex-column">
+                                <strong>Rank</strong>
+                            </div>
+                            <div class="col-4 flex-column">
+                                <strong>Team</strong>
+                            </div>
+                            <div class="col flex-column">
+                                <strong>$$</strong>
+                            </div>
+                            <div class="col-2 flex-column">
+                                <strong>W-L</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for current_rank in rankings.sorted_historical_ranks[0][0] %}
+                        {% set rank = current_rank[1].overall_rank %}
+                        <div class="card-body">
+                            <div class="row flex-row d-flex flex-nowrap align-items-center mr-auto text-left">
+                                <div class="col flex-column">
+                                    <output id='start-week-{{ rank }}-overall-rank'></output>
+                                </div>
+
+                                <div class="col-4 flex-column text-ellipsis-100 font-0-95x">
+                                    <output id='start-week-{{ rank }}-team-name'></output>
+                                </div>
+
+                                <div class="col flex-column">
+                                    <output id='start-week-{{ rank }}-ranking-points'></output>
+                                </div>
+
+                                <div class="col-2 flex-column">
+                                    <output id='start-week-{{ rank }}-record'></output>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col flex-col">
+                <div class="card flex-card border-0 p-2"
+                     id="end-week-{{ rank }}-comparison-card">
+
+                    <div class="card-title font-weight-bold btn header-style"
+                         id="end-week-{{ rank }}-standings-comparison-heading">
+
+                        <output id="end-week-{{ rank }}-title-output"></output>
+                    </div>
+
+                    <div class="card-header border-0 header-style font-0-7x">
+                        <div class="row flex-row d-flex flex-nowrap align-items-center mr-auto text-left">
+                            <div class="col flex-column">
+                                <strong>Rank</strong>
+                            </div>
+                            <div class="col-4 flex-column">
+                                <strong>Team</strong>
+                            </div>
+                            <div class="col flex-column">
+                                <strong>$$</strong>
+                            </div>
+                            <div class="col-2 flex-column">
+                                <strong>W-L</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% for current_rank in rankings.sorted_historical_ranks[1][0] %}
+                        {% set rank = current_rank[1].overall_rank %}
+                        <div class="card-body">
+                            <div class="row flex-row d-flex flex-nowrap align-items-center mr-auto text-left">
+                                <div class="col flex-column">
+                                    <output id='end-week-{{ rank }}-overall-rank'></output>
+                                </div>
+
+                                <div class="col-4 flex-column text-ellipsis-100 font-0-95x">
+                                    <output id='end-week-{{ rank }}-team-name'></output>
+                                </div>
+
+                                <div class="col flex-column">
+                                    <output id='end-week-{{ rank }}-ranking-points'></output>
+                                </div>
+
+                                <div class="col-2 flex-column">
+                                    <output id='end-week-{{ rank }}-record'></output>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -63,6 +63,15 @@ def update_in_progress_games():
     league_data_path = request.args.get('league_data_path')
     return jsonify(json.dumps(League.get_in_progress_data(league_data_path)))
 
+@app.route('/standings_comparison')
+def standings_comparison():
+    start_week = request.args.get('start_week')
+    end_week = request.args.get('end_week')
+    league_data_path = request.args.get('league_data_path')
+    rankings = LeagueRankings(league, 10, 5, 1)
+    jsonify(json.dumps(rankings))
+    return jsonify(json.dumps(League.get_in_progress_data(league_data_path)))
+
 
 if __name__ == '__main__':
     app.run()

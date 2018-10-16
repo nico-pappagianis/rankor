@@ -3,8 +3,8 @@
 
         <div id="season-standings-accordion">
 
-            <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;"
-                 id="season-standings-card">
+            <div class="card flex-card border-0 p-2" id="season-standings-card">
+
                 <div class="card-title font-weight-bold btn header-style text-center text-lg-center"
                      id="season-standings-heading"
                      role="button" data-toggle="collapse" data-target="#season-standings-collapse" aria-expanded="true"
@@ -40,10 +40,11 @@
             <div id="season-standings-collapse" class="collapse show" data-parent="#season-standings-accordion"
                  aria-labelledby="season-standings-heading">
 
-                <div class="card flex-card border-0 p-2" style="min-width: 725px; max-width: 725px;">
+                <div class="card flex-card border-0 p-2">
                     <div class="card-header border-0 header-style">
-                        <div class="row flex-row d-flex flex-nowrap align-items-center font-0-7x mr-auto text-left">
-                            <div class="col flex-column">
+                        <div class="row flex-row d-flex flex-nowrap align-items-center font-0-7x text-right">
+
+                            <div class="col  text-left">
                                 <div class="tooltip-container">
                                     <strong>Rank</strong>
 
@@ -54,7 +55,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4 flex-column text-center">
+                            <div class="col-4 text-center">
                                 <div class="tooltip-container">
                                     <strong>Team</strong>
 
@@ -65,7 +66,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col flex-column">
+                            <div class="col">
                                 <div class="tooltip-container">
                                     <strong>$$</strong>
 
@@ -76,7 +77,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-2 flex-column">
+                            <div class="col text-center">
                                 <div class="tooltip-container">
                                     <strong>W-L</strong>
 
@@ -87,7 +88,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col flex-column">
+                            <div class="col text-center">
                                 <div class="tooltip-container">
                                     <strong>Avg Rank</strong>
 
@@ -98,7 +99,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col flex-column">
+                            <div class="col ">
                                 <div class="tooltip-container">
                                     <strong>O/S</strong>
 
@@ -109,7 +110,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col flex-column">
+                            <div class="col text-center">
                                 <div class="tooltip-container">
                                     <strong>Avg O/S</strong>
 
@@ -121,26 +122,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        {% if rankings.in_progress %}
-
-                            <div class="row flex-row d-flex align-items-center light-gray-text font-0-75x pt-5 mr-auto"
-                                 style="background-color: #76889969; border-radius: 10px;">
-                                <div class="col flex-column">
-                                    <b class="fas fa-arrow-up up-arrow rank-increase">N</b>
-                                    <strong>Increased N spots</strong>
-                                </div>
-                                <div class="col flex-column">
-                                    <b class="fas fa-equals text-dark"></b>
-                                    <strong>No change</strong>
-                                </div>
-                                <div class="col flex-column">
-                                    <b class="fas fa-arrow-down down-arrow rank-decrease">N</b>
-                                    <strong>Decreased N spots</strong>
-                                </div>
-                                <div class="row flex-row d-flex flex-nowrap align-items-center text-center text-dark small"></div>
-                            </div>
-                        {% endif %}
                     </div>
 
                     {% for current_rank, progress_rank in rankings.sorted_season_ranks | zip(rankings.sorted_season_ranks_in_progress) %}
@@ -168,31 +149,39 @@
                         {% set opacity_scale = 1 %}
                         {% set rank_bg = [] %}
                         <div class="card-body">
-                            <div class="row flex-row d-flex flex-nowrap align-items-center mr-auto text-left font-0-8x">
-                                <div class="col flex-column">
+                            <div class="row flex-row d-flex flex-nowrap align-items-center text-right font-0-8x">
+
+                                <div class="col text-left">
                                     <output id='{{ current_rank_id_prefix }}overall-rank'>{{ current_rank[1].overall_rank }}</output>
                                 </div>
 
-                                <div class="col-4 flex-column">
+                                <div class="col-4 flex-column text-left">
+
                                     <div class="col flex-column">
-                                        <div class="text-ellipsis">
-                                        <span class="font-0-75x mr--2 hidden">
-                                                <output>{{ (rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior) | abs }}</output>
-                                            </span>
-                                            <span class="{{ arrow_class }} font-0-9x pr-1 hidden"></span>
-                                            <output class="font-0-9x"
+                                        <div class="text-ellipsis-100">
+
+                                            {% if rankings.in_progress %}
+
+                                                <span class="font-0-9x mr--2 hidden">
+                                                    <output class="font-0-9x">{{ (rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior) | abs }}</output>
+                                                </span>
+                                                <span class="{{ arrow_class }} font-0-9x pr-1 hidden"></span>
+
+                                            {% endif %}
+
+                                            <output class="font-0-75x"
                                                     id='{{ current_rank_id_prefix }}team-name'>{{ current_rank[1].team.name }}</output>
                                         </div>
                                     </div>
-                                    {% if rankings.in_progress %}
 
-                                        <div class="col flex-column flex-nowrap {{ color_class }}">
-                                            <div class="text-ellipsis">
+                                    {% if rankings.in_progress %}
+                                        <div class="col flex-column flex-nowrap text-left {{ color_class }}">
+                                            <div class="text-ellipsis-100">
                                             <span class="font-0-9x mr--2">
                                                 <output class="font-0-9x">{{ (rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior) | abs }}</output>
                                             </span>
                                                 <span class="{{ arrow_class }} font-0-9x pr-1"></span>
-                                                <output class="font-0-9x"
+                                                <output class="font-0-75x"
                                                         id='{{ progress_rank_id_prefix }}team-name'>{{ progress_rank[1].team.name }}</output>
                                             </div>
 
@@ -200,33 +189,33 @@
                                     {% endif %}
                                 </div>
 
-                                <div class="col flex-column">
+                                <div class="col">
                                     <output id='{{ current_rank_id_prefix }}ranking-points'>{{ current_rank[1].ranking_points }}</output>
                                     {% if rankings.in_progress %}
                                         <div class="row flex-row d-flex {{ color_class }}">
-                                            <div class="col flex-column">
+                                            <div class="col">
                                                 <output id='{{ progress_rank_id_prefix }}ranking-points'>{{ progress_rank[1].ranking_points }}</output>
                                             </div>
                                         </div>
                                     {% endif %}
                                 </div>
 
-                                <div class="col-2 flex-column">
+                                <div class="col">
                                     <output id='{{ current_rank_id_prefix }}record'>{{ current_rank[1].wins }}-{{ current_rank[1].losses }}{{ '-' ~ current_rank[1].draws if current_rank[1].draws else '' }}</output>
                                     {% if rankings.in_progress %}
                                         <div class="row flex-row d-flex {{ color_class }}">
-                                            <div class="col flex-column">
+                                            <div class="col">
                                                 <output id='{{ progress_rank_id_prefix }}record'>{{ progress_rank[1].wins }}-{{ progress_rank[1].losses }}{{ '-' ~ progress_rank[1].draws if progress_rank[1].draws else '' }}</output>
                                             </div>
                                         </div>
                                     {% endif %}
                                 </div>
 
-                                <div class="col flex-column">
+                                <div class="col">
                                     <output id='{{ current_rank_id_prefix }}avg-rank'>{{ "%.1f" % (current_rank[1].avg_rank | round(2)) }}</output>
                                     {% if rankings.in_progress %}
                                         <div class="row flex-row d-flex {{ color_class }}">
-                                            <div class="col flex-column">
+                                            <div class="col">
                                                 <output id='{{ progress_rank_id_prefix }}avg-rank'>{{ "%.1f" % (progress_rank[1].avg_rank | round(2)) }}</output>
                                             </div>
                                         </div>
@@ -234,22 +223,22 @@
                                 </div>
 
 
-                                <div class="col flex-column">
+                                <div class="col ">
                                     <output id='{{ current_rank_id_prefix }}outscores'>{{ current_rank[1].outscores }}</output>
                                     {% if rankings.in_progress %}
                                         <div class="row flex-row d-flex {{ color_class }}">
-                                            <div class="col flex-column">
+                                            <div class="col ">
                                                 <output id='{{ progress_rank_id_prefix }}outscores'>{{ progress_rank[1].outscores }}</output>
                                             </div>
                                         </div>
                                     {% endif %}
                                 </div>
 
-                                <div class="col flex-column">
+                                <div class="col ">
                                     <output id='{{ current_rank_id_prefix }}avg-outscores'>{{ "%.1f" % (current_rank[1].avg_outscores | round(2)) }}</output>
                                     {% if rankings.in_progress %}
                                         <div class="row flex-row d-flex {{ color_class }}">
-                                            <div class="col flex-column">
+                                            <div class="col ">
                                                 <output id='{{ progress_rank_id_prefix }}avg-outscores'>{{ '%.1f'|format(progress_rank[1].avg_outscores|float) }}</output>
                                             </div>
                                         </div>
@@ -258,8 +247,27 @@
                             </div>
                         </div>
                     {% endfor %}
+                    <div class="card-body">
+                        {% if rankings.in_progress %}
+                            <hr>
+                            <div class="row flex-row d-flex align-items-center font-0-75x mr-auto">
+                                <div class="col flex-column rank-increase">
+                                    <b class="fas fa-arrow-up up-arrow">N</b>
+                                    <strong>Increased N spots</strong>
+                                </div>
+                                <div class="col flex-column">
+                                    <b class="fas fa-equals text-dark"></b>
+                                    <strong>No change</strong>
+                                </div>
+                                <div class="col flex-column rank-decrease">
+                                    <b class="fas fa-arrow-down down-arrow">N</b>
+                                    <strong>Decreased N spots</strong>
+                                </div>
+                                <div class="row flex-row d-flex flex-nowrap align-items-center text-center text-dark small"></div>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
