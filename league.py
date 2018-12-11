@@ -7,12 +7,8 @@ from fantasy_data import FantasyData, load, save
 from matchup import MatchupsData
 from rankings import LeagueRankings
 from serializable import Serializable
-from team import TeamData
-
-GAMES_DATA_DIR = os.path.join('data', 'games')
-GAME_CODE_DATA_DIR = os.path.join(GAMES_DATA_DIR, '{game_code}')
-GAME_SEASON_DATA_DIR = os.path.join(GAME_CODE_DATA_DIR, '{season}')
-GAME_KEY_DATA_FILE = 'key.data'
+from team import TeamData, TeamWeekRosterData
+from game import GAME_SEASON_DATA_DIR, GameData
 
 LEAGUE_DATA_FILE = 'league.data'
 LEAGUE_DATA_DIR_FMT = os.path.join(GAME_SEASON_DATA_DIR, 'leagues', '{league_id}')
@@ -23,7 +19,6 @@ WEEK_DATA_DIR = os.path.join('{league_data_dir}', 'week-{week}')
 GAME_WEEK_DATA_PATH = os.path.join(WEEK_DATA_DIR, GAME_WEEK_DATA_FILE)
 
 LEAGUE_API_QUERY_FMT = 'league/{league_key}/standings'
-GAME_KEY_QUERY = 'games;game_codes={game_code};seasons={season}'
 
 logger = logging.getLogger(__name__)
 
@@ -126,6 +121,10 @@ class League(Serializable):
         self.end_date = league_data.get_attribute(LeagueAttrs.END_DATE)
         self.teams = TeamData(self).teams
 
+        for week in range(self.start_week, min(self.current_week, self.end_week) + 1):
+            for team in self.teams.values():
+                roster = TeamWeekRosterData(team, week)
+
         for week in reversed(range(self.start_week, self.end_week + 1)):
             if not self.num_regular_season_games:
                 if MatchupsData(self, week).game_week:
@@ -160,15 +159,7 @@ class LeagueData(FantasyData):
         self.season = season
         self.league_id = league_id
 
-        self.game_key = GameKeyData(game_code, season).game_key
+        self.game_key = GameData(game_code, season).game_key
         self.league_key = '.'.join([self.game_key, 'l', league_id])
 
         super(LeagueData, self).__init__(api_query=LEAGUE_API_QUERY_FMT.format(league_key=self.league_key))
-
-
-class GameKeyData(FantasyData):
-    def __init__(self, game_code, season):
-        self.game_key = None
-
-        super(GameKeyData, self).__init__(api_query=GAME_KEY_QUERY.format(game_code=game_code, season=season))
-        self.game_key = self.get_attribute(GameAttrs.GAME_KEY)

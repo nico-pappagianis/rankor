@@ -1,3 +1,4 @@
+from numbers import Number
 from datetime import datetime
 from enum import Enum
 
@@ -36,8 +37,10 @@ class LeagueRankings(Serializable):
 
         self.set_week_ranks()
 
-        [self.historical_ranks.update(week=self.get_season_ranks(last_week=week)) for week in range(1, league.current_week)]
-        self.sorted_historical_ranks = [(ranks_to_sorted_array(self.get_season_ranks(last_week=week)), week) for week in range(1, league.current_week)]
+        [self.historical_ranks.update(week=self.get_season_ranks(last_week=week)) for week in
+         range(1, league.current_week)]
+        self.sorted_historical_ranks = [(ranks_to_sorted_array(self.get_season_ranks(last_week=week)), week) for week in
+                                        range(1, league.current_week)]
 
         self.season_ranks = self.get_season_ranks()
         self.season_ranks_prior = self.get_season_ranks(last_week=league.current_week - 1)
@@ -85,7 +88,9 @@ class LeagueRankings(Serializable):
                 season_ranks[team_id].avg_outscores += float(
                     round(week_rank.outscores / len(self.week_ranks.keys()), 2))
                 season_ranks[team_id].ranking_points += week_rank.ranking_points
-                season_ranks[team_id].avg_rank += float(round(week_rank.rank / len(self.week_ranks.keys()), 2))
+
+                if isinstance(week_rank.rank, Number):
+                    season_ranks[team_id].avg_rank += float(round(week_rank.rank / len(self.week_ranks.keys()), 2))
 
         sorted_season_ranks = ranks_to_sorted_array(season_ranks)
         for i in range(len(sorted_season_ranks)):
@@ -127,33 +132,44 @@ class LeagueRankings(Serializable):
                 self.week_ranks[week].append(
                     WeekRank(game_week, team2, team1, matchup.team2_points, matchup.team1_points))
 
+            self.week_ranks[week].sort(key=lambda team_rank: team_rank.team_points, reverse=True)
+
             if week in self.week_ranks:
                 self.rank_teams(week)
 
     def rank_teams(self, week):
-        self.week_ranks[week].sort(key=lambda team_rank: team_rank.team_points, reverse=True)
-        teams_id_to_rank = {}
-        rank = 1
-        skip_from_draw_list = []
+        self.rank_week(week)
 
-        for i in range(len(self.week_ranks[week])):
-            week_rank = self.week_ranks[week][i]
+    def rank_week(self, week):
+        self.calculate_ranking_points(week)
+        ranks = self.week_ranks[week]
+        ranks.sort(key=lambda x: (x.ranking_points, x.team_points, x.win), reverse=True)
+        for i, rank in enumerate(ranks, 1):
+            if rank.team_points == 0:
+                rank.rank = '-'
+            else:
+                rank.rank = i
 
-            if week_rank.team.team_id in skip_from_draw_list:
-                continue
+    def calculate_ranking_points(self, week):
+        self.calculate_outscores(week)
+        ranks = self.week_ranks[week]
+        for rank in ranks:
+            if rank.team_points == 0:
+                rank.ranking_points = 0
+            else:
+                rank.ranking_points = self.win_value * rank.win * 1 + self.draw_value * rank.draw * 1 + self.outscore_value * rank.outscores
 
-            teams_id_to_rank[week_rank.team.team_id] = rank
+    def calculate_outscores(self, week):
+        ranks = self.week_ranks[week]
 
-            if week_rank.draw:
-                teams_id_to_rank[week_rank.opponent.team_id] = rank
-                skip_from_draw_list.append(week_rank.opponent.team_id)
+        for i, rank_being_sorted in enumerate(ranks):
+            for other_rank in ranks[i + 1:]:
 
-            rank += 1
+                if other_rank.team.team_id == rank_being_sorted.opponent.team_id:
+                    continue
 
-        for rank in self.week_ranks[week]:
-            rank.rank = teams_id_to_rank[rank.team.team_id]
-            rank.outscores = self.league.num_teams - rank.rank - (1 if rank.win else 0)
-            rank.ranking_points = self.win_value * rank.win * 1 + self.draw_value * rank.draw * 1 + self.outscore_value * rank.outscores
+                if rank_being_sorted.team_points > other_rank.team_points:
+                    rank_being_sorted.outscores += 1
 
 
 def ranks_to_sorted_array(ranks):
@@ -177,7 +193,7 @@ class SeasonRank(Serializable):
 class WeekRank(Serializable):
     def __init__(self, game_week, team, opponent, team_points, opponent_points):
         super(WeekRank, self).__init__()
-        self.outscores = None
+        self.outscores = 0
         self.rank = None
         self.ranking_points = None
         self.game_week = game_week
@@ -187,12 +203,15 @@ class WeekRank(Serializable):
         self.win = team_points > opponent_points
         self.draw = team_points == opponent_points
         self.result = None
-        if self.win:
-            self.result = 'W'
-        elif self.draw:
-            self.result = 'D'
+        if game_week.week_in_progress:
+            self.result = '?'
         else:
-            self.result = 'L'
+            if self.win:
+                self.result = 'W'
+            elif self.draw:
+                self.result = 'D'
+            else:
+                self.result = 'L'
 
         self.team_points = team_points
         self.opponent_points = opponent_points

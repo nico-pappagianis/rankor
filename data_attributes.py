@@ -13,6 +13,7 @@ PST = pytz.timezone('US/Pacific')
 
 class GameAttrs:
     GAME_KEY = join(FANTASY_CONTENT, 'games.game.game_key.cdata')
+    STAT_CATEGORIES = join(FANTASY_CONTENT, 'games.game.game_key.cdata')
 
 
 class LeagueAttrs:
@@ -42,7 +43,10 @@ class TeamAttrs:
     TEAM = join(FANTASY_CONTENT, 'team')
     TEAMS = join(LeagueAttrs.LEAGUE, 'teams.team')
     TEAM_MATCHUPS = join(TEAM, 'matchups.matchup')
+    TEAM_POINTS = join(TEAM, 'team_points.total.cdata')
 
     TEAM_ID = 'team_id.cdata'
     TEAM_KEY = 'team_key.cdata'
     TEAM_NAME = 'name.cdata'
+
+    TEAM_PLAYERS = join(TEAM, 'roster.players.player')

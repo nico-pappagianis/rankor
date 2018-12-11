@@ -1,4 +1,4 @@
-<div class="container-fluid pl-0 font-0-8x">
+<div class="container-fluid pl-0 font-0-75x">
     <div class=" text-center justify-content-lg-center d-lg-flex section-anchor">
 
         <div id="week-rankings-accordion">
@@ -41,34 +41,34 @@
                                  aria-labelledby="week-{{ week }}-rankings-heading">
 
 
-                                <div class="card-header border-0 header-style align-items-center">
+                                <div class="card-header border-0 header-style align-items-center font-0-8x">
 
-                                    <div class="row flex-row d-flex flex-nowrap">
-                                        <div class="col flex-column text-left">
+                                    <div class="row flex-row d-flex flex-nowrap text-right">
+                                        <div class="col text-left">
                                             Rank
                                         </div>
 
-                                        <div class="col-3 flex-column text-left">
+                                        <div class="col-3 text-left">
                                             Team
                                         </div>
 
-                                        <div class="col flex-column text-left">
+                                        <div class="col text-left">
                                             Pts
                                         </div>
 
-                                        <div class="col flex-column text-left pl-5">
+                                        <div class="col ">
                                             OPts
                                         </div>
 
-                                        <div class="col-2 flex-column text-right">
+                                        <div class="col-2 text-center">
                                             Opp
                                         </div>
 
-                                        <div class="col flex-column text-right pl-5 ">
+                                        <div class="col">
                                             W/L
                                         </div>
 
-                                        <div class="col flex-column pl-1">
+                                        <div class="col">
                                             $$
                                         </div>
                                     </div>
@@ -79,26 +79,26 @@
                                     {% set rank_id_prefix = [week, rank.team.team_id, rank.opponent.team_id] | join('-') %}
 
                                     <div class="card-body">
-                                        <div class="row flex-row d-flex flex-nowrap align-items-center">
-                                            <div class="col-1 text-left">
+                                        <div class="row flex-row d-flex flex-nowrap align-items-center text-right">
+                                            <div class="col text-left">
                                                 <output id="{{ rank_id_prefix }}-rank">{{ rank.rank }}</output>
                                             </div>
-                                            <div class="col-3 flex-column text-ellipsis-100 font-0-8x text-left">
+                                            <div class="col-3 flex-column text-ellipsis-100 font-0-75x text-left">
                                                 <output id="{{ rank_id_prefix }}-team-name">{{ rank.team.name }}</output>
                                             </div>
-                                            <div class="col-2 text-left">
+                                            <div class="col">
                                                 <output id="{{ rank_id_prefix }}-team-points">{{ "%.2f" | format(rank.team_points) }}</output>
                                             </div>
-                                            <div class="col-2 text-left">
+                                            <div class="col">
                                                 <output id="{{ rank_id_prefix }}-opponent-points">{{ "%.2f" | format(rank.opponent_points) }}</output>
                                             </div>
-                                            <div class="col-2 flex-column text-ellipsis-75 font-0-8x text-left">
+                                            <div class="col-2 flex-column text-ellipsis-75 font-0-75x text-left">
                                                 <output id="{{ rank_id_prefix }}-opponent-name">{{ rank.opponent.name }}</output>
                                             </div>
-                                            <div class="col flex-column ml-auto text-right">
+                                            <div class="col text-center">
                                                 <output id="{{ rank_id_prefix }}-result">{{ rank.result }}</output>
                                             </div>
-                                            <div class="col flex-column ml-auto text-right">
+                                            <div class="col">
                                                 <output id="{{ rank_id_prefix }}-ranking-points">{{ rank.ranking_points }}</output>
                                             </div>
                                         </div>

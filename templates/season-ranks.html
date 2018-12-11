@@ -44,7 +44,7 @@
                     <div class="card-header border-0 header-style">
                         <div class="row flex-row d-flex flex-nowrap align-items-center font-0-7x text-right">
 
-                            <div class="col  text-left">
+                            <div class="col text-left">
                                 <div class="tooltip-container">
                                     <strong>Rank</strong>
 
@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4 text-center">
+                            <div class="col-4 text-left pl-5">
                                 <div class="tooltip-container">
                                     <strong>Team</strong>
 
@@ -163,7 +163,8 @@
                                             {% if rankings.in_progress %}
 
                                                 <span class="font-0-9x mr--2 hidden">
-                                                    <output class="font-0-9x">{{ (rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior) | abs }}</output>
+                                                    {% set rank_change = (rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior) | abs %}
+                                                    <output class="font-0-9x">{{ rank_change if rank_change else '' }} </output>
                                                 </span>
                                                 <span class="{{ arrow_class }} font-0-9x pr-1 hidden"></span>
 
@@ -178,7 +179,8 @@
                                         <div class="col flex-column flex-nowrap text-left {{ color_class }}">
                                             <div class="text-ellipsis-100">
                                             <span class="font-0-9x mr--2">
-                                                <output class="font-0-9x">{{ (rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior) | abs }}</output>
+                                                {% set rank_change = (rankings.in_progress_rank_changes[progress_team_id].current - rankings.in_progress_rank_changes[progress_team_id].prior) | abs %}
+                                                <output class="font-0-9x">{{ rank_change if rank_change else '' }} </output>
                                             </span>
                                                 <span class="{{ arrow_class }} font-0-9x pr-1"></span>
                                                 <output class="font-0-75x"
